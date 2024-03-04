@@ -30,28 +30,37 @@ body {
 
 #popUp {
   opacity: 0;
-  pointer-events: none;
   transition: 0.2s;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+#popUpContainer:not(:focus-within) #popUp {
+  opacity: 0;
+  pointer-events: none;
 }
 
 #popUpContainer {
   position: relative;
 }
 
-#popUpContainer:focus-within #popUp {
-  display: block;
-  pointer-events: auto;
-  opacity: 1;
-}
-
-#popupButton:focus-within + #popUp {
-  display: block;
-  pointer-events: auto;
+#popUpContainer:focus-within + #popUp {
+  pointer-events: none;
   opacity: 1;
   transition: 0.5s;
   animation: clipPathTransition 1s cubic-bezier(0.85, 0, 0.15, 1);
   animation-fill-mode: forwards;
+}
+
+#customcolor:focus-within + #popUp {
+  opacity: 1;
+}
+
+:is(#popUpContainer:focus-within, #customcolor:focus-within) + #popUp {
+  opacity: 1;
+}
+
+#popupButton:focus-within + #popUp {
+  opacity: 1;
 }
 
 @keyframes clipPathTransition {
@@ -206,22 +215,129 @@ body {
 }
 
 
-textarea {
-  min-height: 8em;
-  max-height: 15em;
+.slider {
+  appearance: none;
+  margin-top: 10px;
+  width: 100%;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    #000,
+    #000 10px,
+    #fff 10px,
+    #fff 12px
+  );
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
-#sendButton{
-  background: linear-gradient(#09f 50%, #0090f0 50%);
-  color: #fff;
-  border: none;
-  margin: 5px;
-  box-shadow: inset 0 5px 0px rgba(255,255,255,0.2),
-              inset 5px 0px 0px rgba(255,255,255,0.1),
-              inset 0 -5px 0px rgba(0,0,0,0.2),
-              inset -5px 0px 0px rgba(0,0,0,0.1),
-              5px 0px 0px #fff,
-              -5px 0px 0px #fff,
-              0px 5px 0px #fff,
-              0px -5px 0px #fff;
+.slider:hover {
+  opacity: 1;
+}
+
+
+.slider::-webkit-slider-thumb::before {
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  appearance: none;
+  width: 40px;
+  height: 500px;
+  background: yellow;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: black;
+  cursor: pointer;
+}
+
+#rightArrow {
+  animation: rightAnimation 0.5s infinite alternate; 
+}
+
+@keyframes rightAnimation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(2px);
+  }
+}
+
+#leftArrow {
+  animation: leftAnimation 0.5s infinite alternate; 
+}
+
+@keyframes leftAnimation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-2px);
+  }
+}
+
+
+:is(#firstColor, #secondColor) {
+  appearance: none;
+  margin: 10px 0px;
+  width: 100%;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 10px,
+    #fff 10px,
+    #fff 12px
+  );
+  outline: none;
+  opacity: 0.5;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+:is(#firstColor, #secondColor):hover {
+  opacity: 1;
+}
+
+:is(#firstColor, #secondColor)::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 15px;
+  border: solid 2px black;
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 0 0 1px  white inset;
+}
+
+#firstColor::-webkit-slider-thumb {
+  background: var(--firstColor, #000);
+}
+
+#firstColor::-moz-range-thumb {
+  background: var(--firstColor, #000);
+}
+
+#secondColor::-webkit-slider-thumb {
+  background: var(--secondColor, #000);
+}
+
+#secondColor::-moz-range-thumb {
+  background: var(--secondColor, #000);
+}
+
+:is(#firstColor, #secondColor)::-moz-range-thumb {
+  width: 25px;
+  height: 15px;
+  border: solid 2px black;
+  mix-blend-mode: screen;
+  cursor: pointer;
+  opacity: 1;
 }

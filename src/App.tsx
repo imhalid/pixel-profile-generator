@@ -1,16 +1,7 @@
-import CardPreview from './components/card-preview'
-import CustomCard from './components/custom-create'
-import './App.css'
-
-const colorData = [
-  { firstColor: '#FF0000', secondColor: '#00FF00' },
-  { firstColor: '#0000FF', secondColor: '#FFFF00' },
-];
-
+import "./App.css";
+import CustomCard from "./components/custom-create";
 
 function App() {
-
-
   return (
     <div className="App">
       <CustomCard />
@@ -29,4 +20,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

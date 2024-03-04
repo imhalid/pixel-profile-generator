@@ -1,0 +1,31 @@
+/* reset */
+
+.PopoverContent {
+    animation-duration: 400ms;
+    animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
+    will-change: transform, opacity;
+}
+
+.PopoverContent[data-state="open"][data-side="clip"] {
+    animation-name: clipPathTransition;
+}
+
+@keyframes clipPathTransition {
+    from {
+        clip-path: inset(100% 0 0 0);
+    }
+    to {
+        clip-path: inset(0);
+    }
+}
+
+#customcolor {
+    width: 160px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.color-button {
+    width: 20px;
+    height: 20px;
+}
