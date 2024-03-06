@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setRotation } from '../store/slices/preview-slice';
 import { useEffect } from 'react';
+import { RootState } from '../store/store';
 
 const RotationAngle = () => {
   const dispatch = useDispatch();
-  const options = useSelector((state) => state.options);
-  const rotation = options.rotation;
+  const preview = useSelector((state: RootState) => state.preview);
+  const rotation = preview.rotation;
   useEffect(() => {
     const sliderElement = document.querySelector('.slider');
     if (sliderElement) {
@@ -28,7 +29,7 @@ const RotationAngle = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setRotation(parseInt(event.target.value)));
   };
-  const value = options.rotation;
+  const value = preview.rotation;
   return (
     <div className="relative flex w-full gap-8">
       <div className=" w-full">

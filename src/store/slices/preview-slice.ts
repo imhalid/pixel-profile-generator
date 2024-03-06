@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type PreviewState = {
+export interface PreviewState {
   rotation: number;
   firstColor: string;
   firstColorPosition: number;
@@ -9,7 +9,7 @@ export type PreviewState = {
   secondColorPosition: number;
   secondColorOpacity: string;
   userName: string;
-};
+}
 
 const initialState: PreviewState = {
   rotation: 0,

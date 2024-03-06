@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import optionsSlice from "./slices/preview-slice";
+import previewSlice from "./slices/preview-slice";
 import settingSlice from "./slices/setting-slice";
-
-const store = configureStore({
+import { PreviewState } from "./slices/preview-slice";
+import { SettingState } from "./slices/setting-slice";
+export interface RootState {
+  preview: PreviewState;
+  setting: SettingState;
+}
+const store = configureStore<RootState>({
   reducer: {
-    options: optionsSlice,
+    preview: previewSlice,
     setting: settingSlice,
   },
 });

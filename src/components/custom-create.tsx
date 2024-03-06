@@ -4,12 +4,13 @@ import RotationAngle from './rotation-angle';
 import ColorPosition from './color-position';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserName } from '../store/slices/preview-slice';
-import { toggleOption } from '../store/slices/setting-slice';
+import { SettingState, toggleOption } from '../store/slices/setting-slice';
+import { RootState } from '../store/store';
 
 const CustomCreate = () => {
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.options.userName);
-  const setting = useSelector((state) => state.setting);
+  const userName = useSelector((state: RootState) => state.preview.userName);
+  const setting = useSelector((state: RootState) => state.setting);
 
   // rotation, custom backroundURL, chose radial or linear or conic gradient
 
@@ -57,7 +58,7 @@ const CustomCreate = () => {
                   className="tgl tgl-skewed"
                   id={checkbox.id}
                   type="checkbox"
-                  defaultChecked={setting[checkbox.id]}
+                  defaultChecked={setting[checkbox.id as keyof SettingState]}
                   onChange={() =>
                     dispatch(toggleOption(checkbox.id as keyof SettingState))
                   }
@@ -96,9 +97,7 @@ const CustomCreate = () => {
       </button> */}
       <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
         <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
-        <CardPreview
-        username={userName}
-        />
+        <CardPreview username={userName} />
       </div>
     </div>
   );

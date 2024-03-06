@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type SettingState = {
+export interface SettingState  {
   screenEffect: boolean;
   pixelateAvatar: boolean;
   includeAllCommits: boolean;
-};
+}
 
 const initialState: SettingState = {
   screenEffect: true,
