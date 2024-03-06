@@ -1,62 +1,30 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 type CardPreviewProps = {
-  rotateDirection:
-    | "to bottom right"
-    | "to bottom left"
-    | "to top right"
-    | "to top left";
-  firstColor: string;
-  secondColor: string;
-  textColor?: string;
-  includeAllCommits?: boolean;
-  pixelateAvatar?: boolean;
-  screenEffect?: boolean;
-  showAvatar?: boolean;
-  showRank?: boolean;
-  showTotalStars?: boolean;
+
   username: string;
-  background?: string;
 };
 
 const CardPreview: React.FC<CardPreviewProps> = ({
-  rotateDirection,
-  firstColor,
-  secondColor,
   username,
-  includeAllCommits,
-  pixelateAvatar,
-  screenEffect,
-  showAvatar,
-  showRank,
-  showTotalStars,
 }) => {
-  const [loading, setLoading] = useState(true);
 
-  // console.table({
-  //   rotateDirection,
-  //   firstColor,
-  //   secondColor,
-  //   username,
-  //   includeAllCommits,
-  //   pixelateAvatar,
-  //   screenEffect,
-  //   showAvatar,
-  //   showRank,
-  //   showTotalStars,
-  //   background,
-  // });
+  const [loading, setLoading] = useState(true);
+  const [generatedUrl, setGeneratedUrl] = useState(
+    'https://pixel-profile.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29'
+  );
   useEffect(() => {
     setLoading(true);
-  }, [firstColor, secondColor, rotateDirection]);
-  const baseURL = "https://pixel-profile.vercel.app/api/github-stats?";
+  }, [username]);
+  const baseURL = 'https://pixel-profile.vercel.app/api/github-stats?';
 
   const handleImageLoad = () => {
     setLoading(false);
   };
 
   const options = useSelector((state) => state.options);
+  const setting = useSelector((state) => state.setting);
 
   // const clearBackground = (str: string) => {
   //   const first15 = str.slice(0, 15);
@@ -78,21 +46,22 @@ const CardPreview: React.FC<CardPreviewProps> = ({
   const gradient = `linear-gradient(${options.rotation}deg, ${options.firstColor} ${options.firstColorPosition}%, ${options.secondColor} ${options.secondColorPosition}%)`;
 
   const createUrlWithParams = () => {
+
     const params = new URLSearchParams();
-    params.append("username", username);
-    screenEffect && params.append("screen_effect", screenEffect.toString());
-    showAvatar && params.append("show_avatar", showAvatar.toString());
-    showRank && params.append("show_rank", showRank.toString());
-    showTotalStars &&
-      params.append("show_total_stars", showTotalStars.toString());
-    includeAllCommits &&
-      params.append("include_all_commits", includeAllCommits.toString());
-    pixelateAvatar &&
-      params.append("pixelate_avatar", pixelateAvatar.toString());
-    params.append("background", gradient);
+    params.append('username', username);
+    params.append('screen_effect', setting.screenEffect.toString());
+    params.append('include_all_commits', setting.includeAllCommits.toString());
+    params.append('pixelate_avatar', setting.pixelateAvatar.toString());
+    params.append('background', gradient);
+    // params.append('theme', setting.theme.toString());
+    // params.append('color', setting.color.toString());
+    // params.append('hide', setting.hide.toString());
     return `${baseURL}${params.toString()}`;
   };
-
+const handleGenerateClick = () => {
+  setLoading(true);
+  setGeneratedUrl(createUrlWithParams());
+};
   return (
     <div className="card relative">
       {loading && (
@@ -100,11 +69,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({
           Loading...
         </div>
       )}
-      <img
-        onLoad={handleImageLoad}
-        src={createUrlWithParams()}
-        alt="placeholder"
-      />
+      <img onLoad={handleImageLoad} src={generatedUrl} alt="placeholder" />
+      <button onClick={handleGenerateClick}>Generate</button>
+      <code className="text-left text-xs flex">{createUrlWithParams()}</code>
     </div>
   );
 };

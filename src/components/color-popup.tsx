@@ -38,7 +38,6 @@ const ColorPalette = () => {
           key={color}
           style={{ backgroundColor: color }}
           className="h-5 w-5 hover:scale-105 focus:scale-105 focus:outline-none"
-          onClick={() => console.log(color)}
         />
       ))}
     </div>

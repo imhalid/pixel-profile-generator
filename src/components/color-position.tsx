@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstColorPosition, setSecondColorPosition } from '../store/optionsSlice';
+import { setFirstColorPosition, setSecondColorPosition } from '../store/slices/preview-slice';
 const ColorPosition = () => {
   const dispatch = useDispatch();
   const firstColorPosition = useSelector((state) => state.options.firstColorPosition);

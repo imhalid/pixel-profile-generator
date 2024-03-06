@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setRotation } from "../store/optionsSlice";
+import { setRotation } from "../store/slices/preview-slice";
 import { useEffect } from "react";
 
 const RotationAngle = () => {

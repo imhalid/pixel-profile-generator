@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFirstColor,
   setSecondColor,
-} from "../store/optionsSlice";
+} from "../store/slices/preview-slice";
 import "./styles.css";
 
 const Popovers = () => {

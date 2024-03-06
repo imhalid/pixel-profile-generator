@@ -1,59 +1,23 @@
-import { useReducer, useState } from 'react';
 import CardPreview from './card-preview';
 import ColorsPopup from './colors-popup';
 import RotationAngle from './rotation-angle';
 import ColorPosition from './color-position';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserName } from '../store/optionsSlice';
+import { setUserName } from '../store/slices/preview-slice';
+import { toggleOption } from '../store/slices/setting-slice';
 
 const CustomCreate = () => {
-
-  const checkboxes = [
-    { id: 'showTotalStars', label: 'Show total stars', defaultValue: false },
-    { id: 'showRank', label: 'Show rank', defaultValue: false },
-    { id: 'showAvatar', label: 'Show avatar', defaultValue: false },
-    { id: 'screenEffect', label: 'Screen effect', defaultValue: false },
-    { id: 'pixelateAvatar', label: 'Pixelate avatar', defaultValue: false },
-    {
-      id: 'includeAllCommits',
-      label: 'Include all commits',
-      defaultValue: false,
-    },
-  ];
-  
   const dispatch = useDispatch();
   const userName = useSelector((state) => state.options.userName);
+  const setting = useSelector((state) => state.setting);
 
   // rotation, custom backroundURL, chose radial or linear or conic gradient
 
-  type State = {
-    [key: string]: boolean;
-  };
-
-  type Action = {
-    type: string;
-    id: string;
-  };
-
-  const checkboxReducer = (state: State, action: Action): State => {
-    if (action.type === 'TOGGLE_CHECKBOX') {
-      return {
-        ...state,
-        [action.id]: !state[action.id],
-      };
-    } else {
-      return state;
-    }
-  };
-
-  const [state, dispatchReducer] = useReducer(checkboxReducer, {
-    showTotalStars: false,
-    showRank: false,
-    showAvatar: false,
-    screenEffect: false,
-    pixelateAvatar: false,
-    includeAllCommits: false,
-  });
+  const checkboxes = [
+    { id: 'screenEffect', label: 'Screen effect' },
+    { id: 'pixelateAvatar', label: 'Pixelate avatar' },
+    { id: 'includeAllCommits', label: 'Include all commits' },
+  ];
 
   return (
     <div className="relative p-10 ring-2 ring-white/50">
@@ -93,9 +57,9 @@ const CustomCreate = () => {
                   className="tgl tgl-skewed"
                   id={checkbox.id}
                   type="checkbox"
-                  defaultChecked={checkbox.defaultValue}
+                  defaultChecked={setting[checkbox.id]}
                   onChange={() =>
-                    dispatchReducer({ type: 'TOGGLE_CHECKBOX', id: checkbox.id })
+                    dispatch(toggleOption(checkbox.id as keyof SettingState))
                   }
                 />
                 <label
@@ -133,16 +97,7 @@ const CustomCreate = () => {
       <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
         <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
         <CardPreview
-          username={userName}
-          firstColor={'#2e222f'}
-          secondColor={'#2e222f'}
-          rotateDirection="to bottom right"
-          showTotalStars={state.showTotalStars}
-          showRank={state.showRank}
-          showAvatar={state.showAvatar}
-          screenEffect={state.screenEffect}
-          pixelateAvatar={state.pixelateAvatar}
-          includeAllCommits={state.includeAllCommits}
+        username={userName}
         />
       </div>
     </div>

@@ -1,15 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const optionsSlice = createSlice({
-  name: "options",
-  initialState: {
-    rotation: 0,
-    firstColor: "#239063",
-    firstColorPosition: 0,
-    secondColor: "#91db69",
-    secondColorPosition: 100,
-    userName: "imhalid",
-  },
+export type PreviewState = {
+  rotation: number;
+  firstColor: string;
+  firstColorPosition: number;
+  secondColor: string;
+  secondColorPosition: number;
+  userName: string;
+};
+
+const initialState: PreviewState = {
+  rotation: 0,
+  firstColor: "#239063",
+  firstColorPosition: 0,
+  secondColor: "#91db69",
+  secondColorPosition: 100,
+  userName: "imhalid",
+};
+
+const previewSlice = createSlice({
+  name: "preview",
+  initialState,
   reducers: {
     setRotation: (state, action: PayloadAction<number>) => {
       state.rotation = action.payload;
@@ -28,7 +39,7 @@ const optionsSlice = createSlice({
     },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
-    }
+    },
   },
 });
 
@@ -38,6 +49,7 @@ export const {
   setFirstColorPosition,
   setSecondColor,
   setSecondColorPosition,
-  setUserName
-} = optionsSlice.actions;
-export default optionsSlice.reducer;
+  setUserName,
+} = previewSlice.actions;
+
+export default previewSlice.reducer;
