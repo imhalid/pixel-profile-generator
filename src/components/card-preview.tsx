@@ -14,6 +14,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({
   const [generatedUrl, setGeneratedUrl] = useState(
     'https://pixel-profile.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29'
   );
+  
   useEffect(() => {
     setLoading(true);
   }, [username]);
@@ -43,7 +44,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({
   //   return str;
   // };
 
-  const gradient = `linear-gradient(${options.rotation}deg, ${options.firstColor} ${options.firstColorPosition}%, ${options.secondColor} ${options.secondColorPosition}%)`;
+  const gradient = `linear-gradient(${options.rotation}deg, ${options.firstColor}${options.firstColorOpacity} ${options.firstColorPosition}%, ${options.secondColor}${options.secondColorOpacity} ${options.secondColorPosition}%)`;
 
   const createUrlWithParams = () => {
 
@@ -64,11 +65,11 @@ const handleGenerateClick = () => {
 };
   return (
     <div className="card relative">
-      {loading && (
+      {/* {loading && (
         <div className="absolute z-10 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-md">
           Loading...
         </div>
-      )}
+      )} */}
       <img onLoad={handleImageLoad} src={generatedUrl} alt="placeholder" />
       <button onClick={handleGenerateClick}>Generate</button>
       <code className="text-left text-xs flex">{createUrlWithParams()}</code>

@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFirstColor,
   setSecondColor,
+  setFirstColorOpacity,
+  setSecondColorOpacity
 } from "../store/slices/preview-slice";
 import "./styles.css";
 
@@ -23,7 +25,10 @@ const PopoverDemo = ({ type }: { type: string }) => {
   const options = useSelector((state) => state.options);
 
   useEffect(()=>{
-    document.body.setAttribute('style', `--firstColor: ${options.firstColor}; --secondColor: ${options.secondColor};`)
+    document.body.setAttribute(
+      'style',
+      `--firstColor: ${options.firstColor}${options.firstColorOpacity} ; --secondColor: ${options.secondColor}${options.secondColorOpacity};`
+    );
   })
 
   const [open, setOpen] = useState(false);
@@ -71,17 +76,28 @@ const PopoverDemo = ({ type }: { type: string }) => {
                 className="PopoverContent flex w-52 flex-col items-center justify-center border-2 border-white/50 bg-neutral-950 p-4"
                 forceMount
               >
-                <ColorPalette dispatch={dispatch} type={type} />
+                <ColorPalette dispatch={dispatch} type={type} options={options} />
               </Popover.Content>
             </animated.div>
           </Popover.Portal>
-        ) : null,
+        ) : null
       )}
     </Popover.Root>
   );
 };
 
-const ColorPalette = ({ dispatch, type }) => {
+const ColorPalette = ({ dispatch, type, options }) => {
+
+  const returnHextOpacity = (value: number) => {
+    const hex = hexOpacity[value];
+    dispatch({
+      type:
+      type === 'firstColor' ? setFirstColorOpacity.type : setSecondColorOpacity.type,
+      payload: hex,
+    })
+  }
+
+  const colorOpacity = type === 'firstColor' ? options.firstColorOpacity : options.secondColorOpacity;
   return (
     <div id="customcolor">
       {colors.map((color) => (
@@ -92,14 +108,25 @@ const ColorPalette = ({ dispatch, type }) => {
           onClick={() => {
             dispatch({
               type:
-                type === "firstColor"
-                  ? setFirstColor.type
-                  : setSecondColor.type,
+                type === 'firstColor' ? setFirstColor.type : setSecondColor.type,
               payload: color,
             });
           }}
         />
       ))}
+      <div className="w-full mt-3 border-t border-white/50">
+        <input
+          type="range"
+          min="0"
+          max="99"
+          value={hexOpacity.indexOf(colorOpacity)}
+          step={1}
+          onChange={(e) => {
+            returnHextOpacity(parseInt(e.target.value));
+          }}
+          id={type === 'firstColor' ? 'firstColor' : 'secondColor'}
+        />
+      </div>
     </div>
   );
 };
@@ -170,3 +197,212 @@ const colors = [
   "#fca790",
   "#fdcbb0",
 ];
+
+// create a array insted of ten element and this element hex opacity value
+/**
+ * Opacity Value	Hex Code
+100	FF
+99	FC
+98	FA
+97	F7
+96	F5
+95	F2
+94	F0
+93	ED
+92	EB
+91	E8
+90	E6
+89	E3
+88	E0
+87	DE
+86	DB
+85	D9
+84	D6
+83	D4
+82	D1
+81	CF
+80	CC
+79	C9
+78	C7
+77	C4
+76	C2
+75	BF
+74	BD
+73	BA
+72	B8
+71	B5
+70	B3
+69	B0
+68	AD
+67	AB
+66	A8
+65	A6
+64	A3
+63	A1
+62	9E
+61	9C
+60	99
+59	96
+58	94
+57	91
+56	8F
+55	8C
+54	8A
+53	87
+52	85
+51	82
+50	80
+49	7D
+48	7A
+47	78
+46	75
+45	73
+44	70
+43	6E
+42	6B
+41	69
+40	66
+39	63
+38	61
+37	5E
+36	5C
+35	59
+34	57
+33	54
+32	52
+31	4F
+30	4D
+29	4A
+28	47
+27	45
+26	42
+25	40
+24	3D
+23	3B
+22	38
+21	36
+20	33
+19	30
+18	2E
+17	2B
+16	29
+15	26
+14	24
+13	21
+12	1F
+11	1C
+10	1A
+9	17
+8	14
+7	12
+6	0F
+5	0D
+4	0A
+3	08
+2	05
+1	03
+0	00
+ */
+
+const hexOpacity = [
+  "00",
+  "03",
+  "05",
+  "08",
+  "0A",
+  "0D",
+  "0F",
+  "12",
+  "14",
+  "17",
+  "1A",
+  "1C",
+  "1F",
+  "21",
+  "24",
+  "26",
+  "29",
+  "2B",
+  "2E",
+  "30",
+  "33",
+  "36",
+  "38",
+  "3B",
+  "3D",
+  "40",
+  "42",
+  "45",
+  "47",
+  "4A",
+  "4D",
+  "4F",
+  "52",
+  "54",
+  "57",
+  "59",
+  "5C",
+  "5E",
+  "61",
+  "63",
+  "66",
+  "69",
+  "6B",
+  "70",
+  "73",
+  "75",
+  "78",
+  "7A",
+  "7D",
+  "80",
+  "82",
+  "85",
+  "87",
+  "8A",
+  "8C",
+  "8F",
+  "91",
+  "94",
+  "96",
+  "99",
+  "9C",
+  "9E",
+  "A1",
+  "A3",
+  "A6",
+  "A8",
+  "AB",
+  "AD",
+  "B0",
+  "B3",
+  "B5",
+  "B8",
+  "BA",
+  "BD",
+  "BF",
+  "C2",
+  "C4",
+  "C7",
+  "C9",
+  "CC",
+  "CF",
+  "D1",
+  "D4",
+  "D6",
+  "D9",
+  "DB",
+  "DE",
+  "E0",
+  "E3",
+  "E6",
+  "E8",
+  "EB",
+  "ED",
+  "F0",
+  "F2",
+  "F5",
+  "F7",
+  "FA",
+  "FC",
+  "FF",
+]

@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setRotation } from "../store/slices/preview-slice";
-import { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { setRotation } from '../store/slices/preview-slice';
+import { useEffect } from 'react';
 
 const RotationAngle = () => {
   const dispatch = useDispatch();
   const options = useSelector((state) => state.options);
-    const rotation = options.rotation;
+  const rotation = options.rotation;
   useEffect(() => {
-    const sliderElement = document.querySelector(".slider");
+    const sliderElement = document.querySelector('.slider');
     if (sliderElement) {
       sliderElement.innerHTML = `
       <style>
@@ -51,18 +51,14 @@ const RotationAngle = () => {
             transform: 'translateX(-50%)',
           }}
         >
-          
           <div className="flex items-center justify-center rounded-full ">
             <div
               className="flex h-full items-center justify-center"
               style={{
                 transform: `rotate(${value}deg)`,
               }}
-            >
-              
-            </div>
+            ></div>
           </div>
-          
         </span>
       </div>
     </div>
