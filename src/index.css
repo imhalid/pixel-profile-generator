@@ -284,7 +284,7 @@ body {
 }
 
 
-:is(#firstColor, #secondColor) {
+:is(#firstColor, #secondColor, #textColor) {
   appearance: none;
   margin: 10px 0px;
   width: 100%;
@@ -302,11 +302,11 @@ body {
   transition: opacity .2s;
 }
 
-:is(#firstColor, #secondColor):hover {
+:is(#firstColor, #secondColor, #textColor):hover {
   opacity: 1;
 }
 
-:is(#firstColor, #secondColor)::-webkit-slider-thumb {
+:is(#firstColor, #secondColor, #textColor)::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 25px;
@@ -333,7 +333,15 @@ body {
   background: var(--secondColor, #000);
 }
 
-:is(#firstColor, #secondColor)::-moz-range-thumb {
+#textColor::-webkit-slider-thumb {
+  background: var(--textColor, #000);
+}
+
+#textColor::-moz-range-thumb {
+  background: var(--textColor, #000);
+}
+
+:is(#firstColor, #secondColor ,#textColor)::-moz-range-thumb {
   width: 25px;
   height: 15px;
   border: solid 2px black;

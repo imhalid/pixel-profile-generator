@@ -1,23 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 type CardPreviewProps = {
   username: string;
 };
-
+//l
 const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState(
-    'https://pixel-profile.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29'
+    "https://pixel-profile.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29"
   );
 
-  useEffect(() => {
-    setLoading(true);
-  }, [username]);
-  const baseURL = 'https://pixel-profile.vercel.app/api/github-stats?';
+  const baseURL = "https://pixel-profile.vercel.app/api/github-stats?";
 
-  const options = useSelector((state: RootState) => state.preview);
+  const preview = useSelector((state: RootState) => state.preview);
   const setting = useSelector((state: RootState) => state.setting);
 
   // const clearBackground = (str: string) => {
@@ -37,17 +34,23 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   //   return str;
   // };
 
-  const gradient = `linear-gradient(${options.rotation}deg, ${options.firstColor}${options.firstColorOpacity} ${options.firstColorPosition}%, ${options.secondColor}${options.secondColorOpacity} ${options.secondColorPosition}%)`;
+  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%)`;
 
   const createUrlWithParams = () => {
     const params = new URLSearchParams();
-    params.append('username', username);
-    params.append('screen_effect', setting.screenEffect.toString());
-    params.append('include_all_commits', setting.includeAllCommits.toString());
-    params.append('pixelate_avatar', setting.pixelateAvatar.toString());
-    params.append('background', gradient);
+    params.append("username", username);
+    setting.screenEffect &&
+      params.append("screen_effect", setting.screenEffect.toString());
+    setting.includeAllCommits &&
+      params.append(
+        "include_all_commits",
+        setting.includeAllCommits.toString()
+      );
+    setting.pixelateAvatar &&
+      params.append("pixelate_avatar", setting.pixelateAvatar.toString());
+    params.append("background", gradient);
     // params.append('theme', setting.theme.toString());
-    // params.append('color', setting.color.toString());
+     params.append('color', preview.textColor + preview.textColorOpacity);
     // params.append('hide', setting.hide.toString());
     return `${baseURL}${params.toString()}`;
   };

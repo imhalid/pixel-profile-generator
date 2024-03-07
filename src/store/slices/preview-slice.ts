@@ -8,6 +8,8 @@ export interface PreviewState {
   secondColor: string;
   secondColorPosition: number;
   secondColorOpacity: string;
+  textColor: string;
+  textColorOpacity: string;
   userName: string;
 }
 
@@ -19,6 +21,8 @@ const initialState: PreviewState = {
   secondColor: "#91db69",
   secondColorPosition: 100,
   secondColorOpacity: 'FF',
+  textColor: "#ffffff",
+  textColorOpacity: 'FF',
   userName: "imhalid",
 };
 
@@ -50,6 +54,12 @@ const previewSlice = createSlice({
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
     },
+    setTextColor: (state, action: PayloadAction<string>) => {
+      state.textColor = action.payload;
+    },
+    setTextColorOpacity: (state, action: PayloadAction<string>) => {
+      state.textColorOpacity = action.payload;
+    },
   },
 });
 
@@ -61,6 +71,8 @@ export const {
   setSecondColor,
   setSecondColorPosition,
   setSecondColorOpacity,
+  setTextColor,
+  setTextColorOpacity,
   setUserName,
 } = previewSlice.actions;
 
