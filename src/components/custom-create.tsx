@@ -1,11 +1,12 @@
-import CardPreview from './card-preview';
-import ColorsPopup from './colors-popup';
-import RotationAngle from './rotation-angle';
-import ColorPosition from './color-position';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserName } from '../store/slices/preview-slice';
-import { SettingState, toggleOption } from '../store/slices/setting-slice';
-import { RootState } from '../store/store';
+import CardPreview from "./card-preview";
+import ColorsPopup from "./colors-popup";
+import RotationAngle from "./rotation-angle";
+import ColorPosition from "./color-position";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserName } from "../store/slices/preview-slice";
+import { toggleOption } from "../store/slices/setting-slice";
+import { RootState } from "../store/store";
+import ThemeSelect from "./theme-select";
 
 const CustomCreate = () => {
   const dispatch = useDispatch();
@@ -15,9 +16,9 @@ const CustomCreate = () => {
   // rotation, custom backroundURL, chose radial or linear or conic gradient
 
   const checkboxes = [
-    { id: 'screenEffect', label: 'Screen effect' },
-    { id: 'pixelateAvatar', label: 'Pixelate avatar' },
-    { id: 'includeAllCommits', label: 'Include all commits' },
+    { id: "screenEffect", label: "Screen effect" },
+    { id: "pixelateAvatar", label: "Pixelate avatar" },
+    { id: "includeAllCommits", label: "Include all commits" },
   ];
 
   return (
@@ -54,47 +55,34 @@ const CustomCreate = () => {
                 className="checkbox-wrapper-8 flex items-center gap-3"
                 key={checkbox.id}
               >
-                <input
-                  className="tgl tgl-skewed"
-                  id={checkbox.id}
-                  type="checkbox"
-                  defaultChecked={setting[checkbox.id as keyof SettingState]}
-                  onChange={() =>
-                    dispatch(toggleOption(checkbox.id as keyof SettingState))
-                  }
-                />
-                <label
-                  className="tgl-btn"
-                  data-tg-off="OFF"
-                  data-tg-on="ON"
-                  htmlFor={checkbox.id}
-                />
-                <label htmlFor={checkbox.id}>{checkbox.label}</label>
+                <div className="container cursor-pointer">
+                  <label className="form-control" htmlFor={checkbox.id}>
+                    <input
+                      type="checkbox"
+                      id={checkbox.id}
+                      defaultChecked={
+                        setting[checkbox.id as "screenEffect" | "pixelateAvatar" | "includeAllCommits"]
+                      }
+                      onChange={() =>
+                        dispatch(
+                          toggleOption(checkbox.id as "screenEffect" | "pixelateAvatar" | "includeAllCommits")
+                        )
+                      }
+                    />
+                    <label
+                      htmlFor={checkbox.id}
+                      className="text-xs cursor-pointer"
+                    >
+                      {checkbox.label}
+                    </label>
+                  </label>
+                </div>
               </div>
             ))}
-            {/* <div>--------------------------</div>
-            <div className="checkbox-wrapper-8 flex items-center gap-3">
-              <input
-                className="tgl tgl-skewed"
-                id="customBackground"
-                type="checkbox"
-                defaultChecked={customBackground}
-                onChange={() => setCustomBackground(!customBackground)}
-              />
-              <label
-                className="tgl-btn"
-                data-tg-off="OFF"
-                data-tg-on="ON"
-                htmlFor="customBackground"
-              />
-              <label htmlFor="customBackground">Custom CSS Background</label>
-            </div> */}
+            <ThemeSelect />
           </div>
         </div>
       </div>
-      {/* <button id="sendButton" className="bg-neutral-900 h-5 flex text-center justify-center p-10">
-        Send
-      </button> */}
       <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
         <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
         <CardPreview username={userName} />
