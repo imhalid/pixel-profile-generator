@@ -57,9 +57,10 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
     setting.themeName !== "--" &&
       params.append("theme", setting.themeName.toString());
     params.append("color", preview.textColor + preview.textColorOpacity);
-     params.append('hide', setting.properties.toString());
+     setting.properties.length >= 1 && params.append('hide', setting.properties.toString());
     return `${baseURL}${params.toString()}`;
   };
+
   const handleGenerateClick = () => {
     setLoading(true);
     setGeneratedUrl(createUrlWithParams());
@@ -71,6 +72,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
           Loading...
         </div>
       )}
+
       <img
         onLoad={() => {
           setLoading(false);

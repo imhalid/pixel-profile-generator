@@ -17,7 +17,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 
 const Popovers = () => {
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center flex-wrap lg:flex-nowrap justify-between gap-2">
       <PopoverDemo type="firstColor" />
       <PopoverDemo type="secondColor" />
       <PopoverDemo type="textColor" />
@@ -61,7 +61,7 @@ const PopoverDemo = ({ type }: { type: string }) => {
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
-          className="z-20 flex w-fit items-center h-full gap-2 bg-neutral-900 px-2 py-1"
+          className="flex w-fit items-center h-full gap-2 bg-neutral-900 px-2 py-1"
           aria-label="Update dimensions"
         >
           <div
@@ -79,7 +79,7 @@ const PopoverDemo = ({ type }: { type: string }) => {
           <Popover.Portal forceMount>
             <animated.div style={styles}>
               <Popover.Content
-                className="PopoverContent flex w-52 flex-col items-center justify-center border-2 border-white/50 bg-neutral-950 p-4"
+                className="PopoverContent z-50 relative flex w-52 flex-col items-center justify-center border-2 border-white/50 bg-neutral-950 p-4"
                 forceMount
               >
                 <ColorPalette

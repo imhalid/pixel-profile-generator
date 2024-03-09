@@ -6,9 +6,9 @@ const HideProperties = () => {
   const dispatch = useDispatch();
   const setting = useSelector((state: RootState) => state.setting);
   return (
-    <div className="flex flex-col text-xs mt-3 relative border-x text-start">
-      <p className="p-1 bg-white text-black ">Hide Properties</p>
-      <div className="grid grid-cols-[repeat(2,_minmax(100px,_auto))] grid-rows-3">
+    <div className="flex flex-col text-xs mt-3 md:mt-0 relative border text-start">
+      <p className="p-1 bg-white text-black border-b-4 border-black">Hide Properties</p>
+      <div className="flex flex-col">
         {properties.map((property, index) => (
           <div key={index} className=" relative border-x">
             <input

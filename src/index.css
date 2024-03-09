@@ -151,7 +151,7 @@ body {
   cursor: pointer;
 }
 
-#rightArrow {
+/* #rightArrow {
   animation: rightAnimation 0.5s infinite alternate; 
 }
 
@@ -175,7 +175,7 @@ body {
   to {
     transform: translateX(-2px);
   }
-}
+} */
 
 
 :is(#firstColor, #secondColor, #textColor) {
@@ -296,4 +296,22 @@ body {
 
 .custom-checkbox[type="checkbox"]:checked::before {
   transform: scale(1);
+}
+
+#rightArrow {
+   width: 0px;
+   height: 0px;
+   border-style: solid;
+   border-width: 5px 0 5px 5px;
+   border-color: transparent transparent transparent #000;
+   transform: rotate(0deg);
+}
+
+#leftArrow {
+   width: 0px;
+   height: 0px;
+   border-style: solid;
+   border-width: 5px 5px 5px 0;
+   border-color: transparent #000 transparent transparent;
+   transform: rotate(0deg);
 }
