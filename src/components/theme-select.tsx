@@ -11,7 +11,7 @@ const ThemeSelect = () => {
       <p className="p-1 bg-white text-black">Builtin Themes</p>
       <div className="flex flex-wrap">
         {themes.map((theme, index) => (
-          <div key={index} className="theme-select relative border-x">
+          <div key={index} className="relative border-x">
             <input
               type="radio"
               id={theme}
@@ -38,4 +38,12 @@ const ThemeSelect = () => {
 
 export default ThemeSelect;
 
-const themes = ["journey", "road", "fuji", "monica", "summer", "lax"];
+const themes = [
+  "--",
+  "journey",
+  "road_trip",
+  "fuji",
+  "monica",
+  "summer",
+  "lax",
+];

@@ -263,7 +263,7 @@ body {
   cursor: not-allowed;
 }
 
-input[type="checkbox"] {
+.custom-checkbox[type="checkbox"] {
   /* Add if not using autoprefixer */
   -webkit-appearance: none;
   /* Remove most all native input styles */
@@ -285,7 +285,7 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
-input[type="checkbox"]::before {
+.custom-checkbox[type="checkbox"]::before {
   content: "";
   width: 0.65em;
   height: 0.65em;
@@ -294,6 +294,6 @@ input[type="checkbox"]::before {
   box-shadow: inset 1em 1em white;
 }
 
-input[type="checkbox"]:checked::before {
+.custom-checkbox[type="checkbox"]:checked::before {
   transform: scale(1);
 }

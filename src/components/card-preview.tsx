@@ -48,10 +48,16 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
       );
     setting.pixelateAvatar &&
       params.append("pixelate_avatar", setting.pixelateAvatar.toString());
-    params.append("background", gradient);
-    // params.append('theme', setting.theme.toString());
-     params.append('color', preview.textColor + preview.textColorOpacity);
-    // params.append('hide', setting.hide.toString());
+      
+    if (setting.themeName !== "--") {
+      params.append("theme", setting.themeName.toString());
+    } else {
+      params.append("background", gradient);
+    }
+    setting.themeName !== "--" &&
+      params.append("theme", setting.themeName.toString());
+    params.append("color", preview.textColor + preview.textColorOpacity);
+     params.append('hide', setting.properties.toString());
     return `${baseURL}${params.toString()}`;
   };
   const handleGenerateClick = () => {

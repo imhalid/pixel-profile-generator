@@ -16,12 +16,18 @@ const ColorPosition = () => {
   const secondColor = useSelector(
     (state: RootState) => state.preview.secondColor
   );
+  const firstColorOpacity = useSelector(
+    (state: RootState) => state.preview.firstColorOpacity
+  );
+  const secondColorOpacity = useSelector(
+    (state: RootState) => state.preview.secondColorOpacity
+  );
 
   return (
     <div
       className="flex justify-center flex-col relative mt-2 w-full"
       style={{
-        backgroundImage: `linear-gradient(90deg, ${firstColor} ${firstColorPosition}%, ${secondColor} ${secondColorPosition}%)`,
+        backgroundImage: `linear-gradient(90deg, ${firstColor}${firstColorOpacity} ${firstColorPosition}%, ${secondColor}${secondColorOpacity} ${secondColorPosition}%)`,
       }}
     >
       <input
@@ -30,7 +36,9 @@ const ColorPosition = () => {
         max={100}
         step={1}
         value={firstColorPosition}
-        onChange={(e) => dispatch(setFirstColorPosition(Number(e.target.value)))}
+        onChange={(e) =>
+          dispatch(setFirstColorPosition(Number(e.target.value)))
+        }
         id="firstColor"
       />
       <input
@@ -39,7 +47,9 @@ const ColorPosition = () => {
         max="100"
         step={1}
         value={secondColorPosition}
-        onChange={(e) => dispatch(setSecondColorPosition(Number(e.target.value)))}
+        onChange={(e) =>
+          dispatch(setSecondColorPosition(Number(e.target.value)))
+        }
         id="secondColor"
       />
     </div>

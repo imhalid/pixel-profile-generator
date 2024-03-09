@@ -7,6 +7,7 @@ import { setUserName } from "../store/slices/preview-slice";
 import { toggleOption } from "../store/slices/setting-slice";
 import { RootState } from "../store/store";
 import ThemeSelect from "./theme-select";
+import HideProperties from "./hide-properties";
 
 const CustomCreate = () => {
   const dispatch = useDispatch();
@@ -58,14 +59,25 @@ const CustomCreate = () => {
                 <div className="container cursor-pointer">
                   <label className="form-control" htmlFor={checkbox.id}>
                     <input
+                      className="custom-checkbox"
                       type="checkbox"
                       id={checkbox.id}
                       defaultChecked={
-                        setting[checkbox.id as "screenEffect" | "pixelateAvatar" | "includeAllCommits"]
+                        setting[
+                          checkbox.id as
+                            | "screenEffect"
+                            | "pixelateAvatar"
+                            | "includeAllCommits"
+                        ]
                       }
                       onChange={() =>
                         dispatch(
-                          toggleOption(checkbox.id as "screenEffect" | "pixelateAvatar" | "includeAllCommits")
+                          toggleOption(
+                            checkbox.id as
+                              | "screenEffect"
+                              | "pixelateAvatar"
+                              | "includeAllCommits"
+                          )
                         )
                       }
                     />
@@ -80,6 +92,7 @@ const CustomCreate = () => {
               </div>
             ))}
             <ThemeSelect />
+            <HideProperties />
           </div>
         </div>
       </div>
