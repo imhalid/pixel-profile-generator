@@ -1,44 +1,44 @@
 import { RootState } from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setHideProperties } from "../store/slices/setting-slice";
+import { setHideStats as setHideStats } from "../store/slices/setting-slice";
 
-const HideProperties = () => {
+const HideStats = () => {
   const dispatch = useDispatch();
   const setting = useSelector((state: RootState) => state.setting);
   return (
     <div className="flex flex-col text-xs mt-3 md:mt-0 relative border text-start">
       <p className="p-1 bg-white text-black border-b-4 border-black">
-        Hide Properties
+        Hide Stats
       </p>
       <div className="flex flex-col">
-        {properties.map((property, index) => (
-          <div key={index} className=" relative border-x">
+        {stats.map((stat, index) => (
+          <div key={index} className=" relative">
             <input
               type="checkbox"
-              id={property}
+              id={stat}
               name="theme"
-              value={property}
-              checked={setting.properties.includes(property)}
+              value={stat}
+              checked={setting.stats.includes(stat)}
               onChange={() => {
-                if (setting.properties.includes(property)) {
+                if (setting.stats.includes(stat)) {
                   dispatch(
-                    setHideProperties(
-                      setting.properties.filter((p) => p !== property)
+                    setHideStats(
+                      setting.stats.filter((p) => p !== stat)
                     )
                   );
                 } else {
                   dispatch(
-                    setHideProperties([...setting.properties, property])
+                    setHideStats([...setting.stats, stat])
                   );
                 }
               }}
               className="hidden"
             />
             <label
-              htmlFor={property}
-              className={`block cursor-pointer p-1 ${setting.properties.includes(property) ? "bg-white text-black" : "transparent"}`}
+              htmlFor={stat}
+              className={`block cursor-pointer p-1 ${setting.stats.includes(stat) ? "bg-white text-black" : "transparent"}`}
             >
-              {property}
+              {stat}
             </label>
           </div>
         ))}
@@ -47,9 +47,9 @@ const HideProperties = () => {
   );
 };
 
-export default HideProperties;
+export default HideStats;
 
-const properties = [
+const stats = [
   "avatar",
   "commits",
   "contributions",

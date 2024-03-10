@@ -7,7 +7,7 @@ import { setUserName } from '../store/slices/preview-slice';
 import { toggleOption } from '../store/slices/setting-slice';
 import { RootState } from '../store/store';
 import ThemeSelect from './theme-select';
-import HideProperties from './hide-properties';
+import HideStats from './hide-stats';
 
 const CustomCreate = () => {
   const dispatch = useDispatch();
@@ -100,7 +100,7 @@ const CustomCreate = () => {
               <ThemeSelect />
             </div>
             <div>
-              <HideProperties />
+              <HideStats />
             </div>
           </div>
         </div>

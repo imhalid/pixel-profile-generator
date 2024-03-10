@@ -15,7 +15,7 @@ export interface SettingState extends BooleanSettingState {
     | "monica"
     | "summer"
     | "lax";
-  properties: string[];
+  stats: string[];
 }
 
 const initialState: SettingState = {
@@ -23,7 +23,7 @@ const initialState: SettingState = {
   pixelateAvatar: false,
   includeAllCommits: true,
   themeName: '--',
-  properties: []
+  stats: []
 };
 
 const setting = createSlice({
@@ -39,12 +39,12 @@ const setting = createSlice({
     setTheme: (state, action: PayloadAction<SettingState["themeName"]>) => {
       state.themeName = action.payload;
     },
-    setHideProperties: (state, action: PayloadAction<SettingState["properties"]>) => {
-      state.properties = action.payload;
+    setHideStats: (state, action: PayloadAction<SettingState["stats"]>) => {
+      state.stats = action.payload;
     }
   },
 });
 
-export const { toggleOption, setTheme, setHideProperties } = setting.actions;
+export const { toggleOption, setTheme, setHideStats } = setting.actions;
 
 export default setting.reducer;
