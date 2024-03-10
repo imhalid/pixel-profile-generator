@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import store, { RootState } from '../store/store';
+import { setCurrentStore } from '../store/slices/setting-slice';
+
 
 type CardPreviewProps = {
   username: string;
 };
 //l
 const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState(
     'https://pixel-profile.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29'
@@ -59,39 +62,52 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   };
 
   const handleGenerateClick = () => {
+    dispatch(setCurrentStore(store.getState()));
+    console.log(typeof setting.currentStore);
     setLoading(true);
     setGeneratedUrl(createUrlWithParams());
   };
+
   return (
-    <div className="card relative">
-      <div className="w-full relative">
-        {loading && (
-          <div className="absolute z-10 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-md">
-            Loading...
-          </div>
-        )}
-        <img
-          className="w-full"
-          onLoad={() => {
-            setLoading(false);
-          }}
-          src={generatedUrl}
-          alt="placeholder"
-        />
+    <div>
+      <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
+        <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
+        <div className="w-full relative">
+          {loading && (
+            <div className="absolute z-10 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-md">
+              Loading...
+            </div>
+          )}
+          <img
+            className="w-full"
+            onLoad={() => {
+              setLoading(false);
+            }}
+            src={generatedUrl}
+            alt="placeholder"
+          />
+        </div>
       </div>
-      <button onClick={handleGenerateClick}>Generate</button>
-      <div className="flex items-center gap-4">
-        <code className="text-left text-xs flex overflow-hidden text-nowrap">
-          {createUrlWithParams()}
-        </code>
+      <div className='mt-4'>
         <button
-          className="active:translate-y-[2px]"
-          onClick={() => {
-            navigator.clipboard.writeText(createUrlWithParams());
-          }}
+          className="w-full bg-white text-black"
+          onClick={handleGenerateClick}
         >
-          Copy
+          Generate
         </button>
+        <div className="flex items-center gap-4">
+          <code className="text-left text-xs flex overflow-hidden text-nowrap">
+            {createUrlWithParams()}
+          </code>
+          <button
+            className="active:translate-y-[2px]"
+            onClick={() => {
+              navigator.clipboard.writeText(createUrlWithParams());
+            }}
+          >
+            Copy
+          </button>
+        </div>
       </div>
     </div>
   );

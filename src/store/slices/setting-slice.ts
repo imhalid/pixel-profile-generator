@@ -8,14 +8,15 @@ export interface BooleanSettingState {
 
 export interface SettingState extends BooleanSettingState {
   themeName:
-    | "--"
-    | "journey"
-    | "road_trip"
-    | "fuji"
-    | "monica"
-    | "summer"
-    | "lax";
+  | "--"
+  | "journey"
+  | "road_trip"
+  | "fuji"
+  | "monica"
+  | "summer"
+  | "lax";
   stats: string[];
+  currentStore: object;
 }
 
 const initialState: SettingState = {
@@ -23,7 +24,8 @@ const initialState: SettingState = {
   pixelateAvatar: false,
   includeAllCommits: true,
   themeName: '--',
-  stats: []
+  stats: [],
+  currentStore: {}
 };
 
 const setting = createSlice({
@@ -41,10 +43,13 @@ const setting = createSlice({
     },
     setHideStats: (state, action: PayloadAction<SettingState["stats"]>) => {
       state.stats = action.payload;
+    },
+    setCurrentStore: (state, action: PayloadAction<SettingState["currentStore"]>) => {
+      state.currentStore = action.payload;
     }
   },
 });
 
-export const { toggleOption, setTheme, setHideStats } = setting.actions;
+export const { toggleOption, setTheme, setHideStats, setCurrentStore } = setting.actions;
 
 export default setting.reducer;

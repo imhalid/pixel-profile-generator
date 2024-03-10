@@ -15,3 +15,16 @@ const store = configureStore<RootState>({
 });
 
 export default store;
+
+
+const defaultState = store.getState();
+const odds = new Set([JSON.stringify(defaultState)])
+store.subscribe(() => {
+  console.log(store.getState().setting.currentStore)
+  const state = store.getState();
+  const squares = new Set([JSON.stringify(state)])
+  const diff = odds.intersection(squares).size === 0
+  // const intersection = Array.from(odds).filter(item => squares.has(item));
+  // const diff = intersection.length === 0;
+  console.log('State changed:', diff)
+})

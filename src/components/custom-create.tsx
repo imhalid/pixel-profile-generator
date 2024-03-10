@@ -105,12 +105,9 @@ const CustomCreate = () => {
           </div>
         </div>
       </div>
-      <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
-        <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
         <div className="w-full">
           <CardPreview username={userName} />
         </div>
-      </div>
     </div>
   );
 };
