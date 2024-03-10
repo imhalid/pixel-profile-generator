@@ -46,7 +46,6 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
         "include_all_commits",
         setting.includeAllCommits.toString()
       );
-    setting.pixelateAvatar &&
       params.append("pixelate_avatar", setting.pixelateAvatar.toString());
       
     if (setting.themeName !== "--") {
