@@ -7,14 +7,13 @@ import { setUserName } from '../store/slices/preview-slice';
 import { toggleOption } from '../store/slices/setting-slice';
 import { RootState } from '../store/store';
 import ThemeSelect from './theme-select';
-import ThemeSelect2 from './theme-select2';
 import HideProperties from './hide-properties';
 
 const CustomCreate = () => {
   const dispatch = useDispatch();
   const userName = useSelector((state: RootState) => state.preview.userName);
   const setting = useSelector((state: RootState) => state.setting);
-
+  const customThemeIsAvailable = setting.themeName !== "--";
   // rotation, custom backroundURL, chose radial or linear or conic gradient
 
   const checkboxes = [
@@ -45,14 +44,18 @@ const CustomCreate = () => {
             />
             <ColorsPopup />
           </div>
-          <RotationAngle />
-          <ColorPosition />
+          <div
+            className={`w-full flex flex-col gap-2 ${customThemeIsAvailable ? "opacity-30 pointer-events-none" : ""}`}
+          >
+            <RotationAngle />
+            <ColorPosition />
+          </div>
         </div>
 
         <div className="flex w-full flex-col items-start justify-start gap-5 text-xs">
           <div className="relative flex h-full w-full flex-wrap justify-between gap-2 p-3 ring-2 ring-white/50">
             <h1 className="absolute -top-3 bg-neutral-950 px-2">Settings</h1>
-            <div className='flex items-start flex-col gap-2'>
+            <div className="flex items-start flex-col gap-2">
               {checkboxes.map((checkbox) => (
                 <div
                   className="checkbox-wrapper-8 flex items-center gap-3"
@@ -67,18 +70,18 @@ const CustomCreate = () => {
                         defaultChecked={
                           setting[
                             checkbox.id as
-                              | 'screenEffect'
-                              | 'pixelateAvatar'
-                              | 'includeAllCommits'
+                              | "screenEffect"
+                              | "pixelateAvatar"
+                              | "includeAllCommits"
                           ]
                         }
                         onChange={() =>
                           dispatch(
                             toggleOption(
                               checkbox.id as
-                                | 'screenEffect'
-                                | 'pixelateAvatar'
-                                | 'includeAllCommits'
+                                | "screenEffect"
+                                | "pixelateAvatar"
+                                | "includeAllCommits"
                             )
                           )
                         }
@@ -97,15 +100,15 @@ const CustomCreate = () => {
               <ThemeSelect />
             </div>
             <div>
-            <HideProperties />
+              <HideProperties />
             </div>
           </div>
         </div>
       </div>
       <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
         <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
-        <div className='w-fit'>
-        <CardPreview username={userName} />
+        <div className="w-full">
+          <CardPreview username={userName} />
         </div>
       </div>
     </div>

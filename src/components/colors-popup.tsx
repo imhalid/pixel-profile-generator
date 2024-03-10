@@ -29,7 +29,8 @@ export default Popovers;
 const PopoverDemo = ({ type }: { type: string }) => {
   const dispatch = useDispatch();
   const preview = useSelector((state: RootState) => state.preview);
-
+  const setting = useSelector((state: RootState) => state.setting);
+  const customThemeIsAvailable = setting.themeName !== "--";
   useEffect(() => {
     document.body.setAttribute(
       "style",
@@ -61,7 +62,11 @@ const PopoverDemo = ({ type }: { type: string }) => {
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
-          className="flex w-fit items-center h-full gap-2 bg-neutral-900 px-2 py-1"
+          className={`flex w-fit items-center h-full gap-2 bg-neutral-900 px-2 py-1 ${
+            customThemeIsAvailable && type !== "textColor"
+              ? "opacity-30 pointer-events-none"
+              : ""
+          }`}
           aria-label="Update dimensions"
         >
           <div

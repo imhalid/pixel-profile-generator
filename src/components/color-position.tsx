@@ -1,27 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import {
   setFirstColorPosition,
   setSecondColorPosition,
-} from '../store/slices/preview-slice';
-import { RootState } from '../store/store';
+} from "../store/slices/preview-slice";
+import { RootState } from "../store/store";
 const ColorPosition = () => {
   const dispatch = useDispatch();
-  const firstColorPosition = useSelector(
-    (state: RootState) => state.preview.firstColorPosition
-  );
-  const secondColorPosition = useSelector(
-    (state: RootState) => state.preview.secondColorPosition
-  );
-  const firstColor = useSelector((state: RootState) => state.preview.firstColor);
-  const secondColor = useSelector(
-    (state: RootState) => state.preview.secondColor
-  );
-  const firstColorOpacity = useSelector(
-    (state: RootState) => state.preview.firstColorOpacity
-  );
-  const secondColorOpacity = useSelector(
-    (state: RootState) => state.preview.secondColorOpacity
-  );
+
+  const {
+    firstColorPosition,
+    secondColorPosition,
+    firstColor,
+    secondColor,
+    firstColorOpacity,
+    secondColorOpacity,
+  } = useSelector((state: RootState) => state.preview);
 
   return (
     <div
@@ -43,8 +36,8 @@ const ColorPosition = () => {
       />
       <input
         type="range"
-        min="0"
-        max="100"
+        min={0}
+        max={100}
         step={1}
         value={secondColorPosition}
         onChange={(e) =>

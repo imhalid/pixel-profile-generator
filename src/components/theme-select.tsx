@@ -27,7 +27,7 @@ const ThemeSelect2 = () => {
   return (
     <div className="flex flex-col text-xs mt-3 border-white border relative text-start">
       <p className="p-1 bg-white  text-center border-black text-black">
-        Builtin Themes
+        Built in Themes
       </p>
       <div className="flex justify-between min-w-52 items-center">
         <button

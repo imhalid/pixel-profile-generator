@@ -72,16 +72,39 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
           Loading...
         </div>
       )}
-
-      <img
-        onLoad={() => {
-          setLoading(false);
-        }}
-        src={generatedUrl}
-        alt="placeholder"
-      />
+      <div className="w-full">
+        <img
+          className="w-full"
+          onLoad={() => {
+            setLoading(false);
+          }}
+          src={generatedUrl}
+          alt="placeholder"
+        />
+      </div>
       <button onClick={handleGenerateClick}>Generate</button>
-      <code className="text-left text-xs flex">{createUrlWithParams()}</code>
+      <div className="flex items-center gap-4">
+        <code
+          // onClick={() => {
+          //   const range = document.createRange();
+          //   range.selectNode(document.querySelector("code") as Node);
+          //   window.getSelection()?.removeAllRanges();
+          //   window.getSelection()?.addRange(range);
+          //   navigator.clipboard.writeText(createUrlWithParams());
+          // }}
+          className="text-left text-xs flex overflow-hidden text-nowrap"
+        >
+          {createUrlWithParams()}
+        </code>
+        <button
+        className="active:translate-y-[2px]"
+          onClick={() => {
+            navigator.clipboard.writeText(createUrlWithParams());
+          }}
+        >
+          Copy
+        </button>
+      </div>
     </div>
   );
 };
