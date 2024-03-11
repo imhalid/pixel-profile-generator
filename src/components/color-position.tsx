@@ -34,6 +34,11 @@ const ColorPosition = () => {
         }
         id="firstColor"
       />
+      <div
+       className='control-information absolute transform -translate-x-1/2 -translate-y-1/2 top-3.5 bg-white px-2 text-nowrap left-1/2 text-black text-xs pointer-events-none'>
+        <span>first color position</span>
+      </div>
+      
       <input
         type="range"
         min={0}
@@ -45,6 +50,9 @@ const ColorPosition = () => {
         }
         id="secondColor"
       />
+      <div className='control-information absolute transform -translate-x-1/2  bottom-1 bg-white px-2 text-nowrap left-1/2 text-black text-xs pointer-events-none'>
+        <span>second color position</span>
+      </div>
     </div>
   );
 };

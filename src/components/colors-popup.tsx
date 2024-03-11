@@ -62,7 +62,7 @@ const PopoverDemo = ({ type }: { type: string }) => {
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
-          className={`flex w-fit items-center h-full gap-2 bg-neutral-900 px-2 py-1 ${
+          className={`flex w-fit group relative items-center h-full gap-2 bg-neutral-900 px-2 py-1 ${
             customThemeIsAvailable && type !== "textColor"
               ? "opacity-30 pointer-events-none"
               : ""
@@ -74,8 +74,15 @@ const PopoverDemo = ({ type }: { type: string }) => {
               backgroundColor: preview[type as keyof PreviewState] as string,
             }}
             id="popupButton"
-            className="relative h-5 w-5 bg-red-500"
+            className="relative h-5 w-5"
           />
+          <div
+          style={{
+            color: preview[type as keyof PreviewState] as string,
+          }}
+          className='control-information absolute transform -translate-x-1/2 top-0 overflow-hidden justify-center flex items-center h-full w-full bg-black px-2 left-1/2 text-white/50 pointer-events-none'>
+            <span>{type}</span>
+          </div>
           <p className="text-xs">{preview[type as keyof PreviewState]}</p>
         </button>
       </Popover.Trigger>
@@ -160,7 +167,7 @@ const ColorPalette = ({
           }}
         />
       ))}
-      <div className="w-full mt-3 border-t border-white/50">
+      <div className="w-full mt-3 border-t border-white/50 relative">
         <input
           type="range"
           min="0"
@@ -172,6 +179,9 @@ const ColorPalette = ({
           }}
           id={type}
         />
+        <div className='control-information absolute transform -translate-x-1/2  top-2.5 bg-black px-2 left-1/2 text-white text-xs pointer-events-none text-nowrap group-hover:opacity-0'>
+          <span>opacity</span>
+        </div>
       </div>
     </div>
   );

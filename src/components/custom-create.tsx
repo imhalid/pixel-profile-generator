@@ -32,7 +32,7 @@ const CustomCreate = () => {
         className="relative mb-4  flex gap-5 flex-col lg:flex-row bg-neutral-950 text-sm text-white"
         id="settings"
       >
-        <div className="relative flex lg:w-1/2 flex-col  items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
+        <div className="relative flex lg:w-1/2 flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50 base-setting">
           <h1 className="absolute -top-3 bg-neutral-950 px-2">Base</h1>
           <div className="flex gap-2 flex-col w-full mb-2">
             <input

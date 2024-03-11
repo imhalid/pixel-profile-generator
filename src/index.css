@@ -315,3 +315,18 @@ body {
    border-color: transparent #000 transparent transparent;
    transform: rotate(0deg);
 }
+
+
+.control-information {
+  transition: opacity 0.2s ease-in-out;
+  font-size: 10px;
+}
+
+.base-setting:hover .control-information  {
+  opacity: 0;
+  
+}
+
+.PopoverContent:hover .control-information {
+  opacity: 0;
+}
