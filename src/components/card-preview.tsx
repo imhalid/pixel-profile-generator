@@ -56,12 +56,15 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
     params.append('color', preview.textColor + preview.textColorOpacity);
     setting.stats.length >= 1 &&
       params.append('hide', setting.stats.toString());
+
     return `${baseURL}${params.toString()}`;
   };
 
   const handleGenerateClick = () => {
-    setLoading(true);
-    setGeneratedUrl(createUrlWithParams());
+    if (createUrlWithParams() !== generatedUrl) {
+      setLoading(true);
+      setGeneratedUrl(createUrlWithParams());
+    }
   };
 
   return (
@@ -69,12 +72,12 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
       <div className="relative flex h-full w-full flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50">
         <h1 className="absolute -top-3 bg-neutral-950 px-2">Preview</h1>
         <div className="w-full relative">
-          
-            <div className={`absolute z-10 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-md saturate-0 transition-all 
-            pointer-events-none ${loading ?'opacity-100':'opacity-0'}`}>
-              Loading...
-            </div>
-          
+
+          <div className={`absolute z-10 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-md saturate-0 transition-all 
+            pointer-events-none ${loading ? 'opacity-100' : 'opacity-0'}`}>
+            Loading...
+          </div>
+
           <img
             className="w-full"
             onLoad={() => {
@@ -86,16 +89,14 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
         </div>
       </div>
       <div className='mt-4'>
-
         <button
-          className="w-full bg-white text-black"
+          className="w-fit px-5 bg-white h-10 text-black active:translate-y-[2px]"
           onClick={handleGenerateClick}
         >
-          Generate
+          Generate New Card
         </button>
-        
-        <div className="flex items-center gap-4">
-          <code className="text-left text-xs flex overflow-hidden text-nowrap">
+        <div className="flex items-center gap-4 mt-5 border-t pt-4">
+          <code className="text-left text-xs flex overflow-hidden break-all">
             {createUrlWithParams()}
           </code>
           <button
