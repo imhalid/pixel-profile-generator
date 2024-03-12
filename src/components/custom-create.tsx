@@ -23,7 +23,7 @@ const CustomCreate = () => {
   ];
 
   return (
-    <div className="relative p-10 ring-2 ring-white/50">
+    <div className="relative p-10 ring-2 mt-10 ring-white/50">
       <h1 className="absolute -top-4 left-1/2 -translate-x-1/2 transform bg-neutral-950 px-3 text-2xl w-fit">
         Github Card Generator
       </h1>

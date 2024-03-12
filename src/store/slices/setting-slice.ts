@@ -20,7 +20,7 @@ export interface SettingState extends BooleanSettingState {
 
 const initialState: SettingState = {
   screenEffect: true,
-  pixelateAvatar: false,
+  pixelateAvatar: true,
   includeAllCommits: true,
   themeName: '--',
   stats: [],

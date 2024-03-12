@@ -15,7 +15,7 @@ export interface PreviewState {
 
 const initialState: PreviewState = {
   rotation: 0,
-  firstColor: "#239063",
+  firstColor: "#165a4c",
   firstColorPosition: 0,
   firstColorOpacity: 'FF',
   secondColor: "#91db69",

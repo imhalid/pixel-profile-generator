@@ -10,7 +10,7 @@ type CardPreviewProps = {
 const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState(
-    'https://pixel-profile-ui.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=false&background=linear-gradient%280deg%2C+%23239063+0%25%2C+%2391db69+100%25%29'
+    'https://pixel-profile-ui.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=true&background=linear-gradient%280deg%2C+%23165a4cFF+0%25%2C+%2391db69FF+100%25%29&color=%23ffffffFF'
   );
 
   const baseURL = 'https://pixel-profile-ui.vercel.app/api/github-stats?';
