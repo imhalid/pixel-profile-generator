@@ -6,7 +6,7 @@ import { RootState } from '../store/store';
 type CardPreviewProps = {
   username: string;
 };
-//l
+
 const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState(
