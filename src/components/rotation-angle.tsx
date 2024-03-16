@@ -1,14 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { setRotation } from '../store/slices/preview-slice';
-import { useEffect } from 'react';
-import { RootState } from '../store/store';
+import { useDispatch, useSelector } from 'react-redux'
+import { setRotation } from '../store/slices/preview-slice'
+import { useEffect } from 'react'
+import { RootState } from '../store/store'
 
 const RotationAngle = () => {
-  const dispatch = useDispatch();
-  const preview = useSelector((state: RootState) => state.preview);
-  const rotation = preview.rotation;
+  const dispatch = useDispatch()
+  const preview = useSelector((state: RootState) => state.preview)
+  const rotation = preview.rotation
   useEffect(() => {
-    const sliderElement = document.querySelector('.slider');
+    const sliderElement = document.querySelector('.slider')
     if (sliderElement) {
       sliderElement.innerHTML = `
       <style>
@@ -24,33 +24,33 @@ const RotationAngle = () => {
   cursor: pointer;
 }
       </style>
-      `;
+      `
     }
-  }, [rotation]);
+  }, [rotation])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setRotation(parseInt(event.target.value)));
-  };
-  const value = preview.rotation;
+    dispatch(setRotation(parseInt(event.target.value)))
+  }
+  const value = preview.rotation
   return (
-    <div className="relative flex w-full group">
-      <div className=" w-full">
+    <div className='relative flex w-full group'>
+      <div className=' w-full'>
         <input
-          type="range"
+          type='range'
           min={0}
           max={360}
           step={10}
           value={value}
           onChange={handleChange}
-          className="slider"
-          id="myRange"
+          className='slider'
+          id='myRange'
         ></input>
       </div>
       <div className='control-information absolute transform -translate-x-1/2 -translate-y-1/2 top-3.5 bg-black px-2 left-1/2 text-white text-xs pointer-events-none'>
         <span>BG Rotation</span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RotationAngle;
+export default RotationAngle
