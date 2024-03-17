@@ -325,3 +325,28 @@ body {
 .PopoverContent:hover .control-information {
   opacity: 0;
 }
+
+.experimental {
+  width: fit-content;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  font-size: 10px;
+  top: 100%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: rgba(150, 0, 0);
+  padding: 0 10px;
+  transition: 0.5s;
+}
+
+.backgroundUrl + .experimental {
+  visibility: hidden;
+}
+
+.backgroundUrl:focus + .experimental {
+  visibility: visible;
+}

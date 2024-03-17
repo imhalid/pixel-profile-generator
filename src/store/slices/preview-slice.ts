@@ -11,6 +11,7 @@ export interface PreviewState {
   textColor: string
   textColorOpacity: string
   userName: string
+  imageUrl: string
 }
 
 const initialState: PreviewState = {
@@ -24,6 +25,7 @@ const initialState: PreviewState = {
   textColor: '#ffffff',
   textColorOpacity: 'FF',
   userName: 'imhalid',
+  imageUrl: '',
 }
 
 const previewSlice = createSlice({
@@ -60,6 +62,9 @@ const previewSlice = createSlice({
     setTextColorOpacity: (state, action: PayloadAction<string>) => {
       state.textColorOpacity = action.payload
     },
+    setImageUrl: (state, action: PayloadAction<string>) => {
+      state.imageUrl = action.payload
+    }
   },
 })
 
@@ -74,6 +79,7 @@ export const {
   setTextColor,
   setTextColorOpacity,
   setUserName,
+  setImageUrl
 } = previewSlice.actions
 
 export default previewSlice.reducer

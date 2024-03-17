@@ -34,7 +34,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   //   return str;
   // };
 
-  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%)`
+  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
 
   const createUrlWithParams = () => {
     const params = new URLSearchParams()

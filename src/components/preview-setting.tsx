@@ -2,12 +2,14 @@ import ColorsPopup from './colors-popup'
 import RotationAngle from './rotation-angle'
 import ColorPosition from './color-position'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserName } from '../store/slices/preview-slice'
+import { setUserName, setImageUrl } from '../store/slices/preview-slice'
 import { RootState } from '../store/store'
 
 const BaseSetting = () => {
   const dispatch = useDispatch()
   const userName = useSelector((state: RootState) => state.preview.userName)
+  const imageUrl = useSelector((state: RootState) => state.preview.imageUrl)
+
   const setting = useSelector((state: RootState) => state.setting)
   const customThemeIsAvailable = setting.themeName !== '--'
   return (
@@ -30,6 +32,18 @@ const BaseSetting = () => {
       >
         <RotationAngle />
         <ColorPosition />
+        <div className='w-full relative'>
+          <input
+            type='text'
+            className='backgroundUrl bg-white/10 p-2 w-full text-white focus:outline-none focus:ring-2 focus:ring-white'
+            placeholder='Image URL'
+            value={imageUrl}
+            onChange={e => dispatch(setImageUrl(e.target.value))}
+          />
+          <label className='experimental text-white'>
+            Experiemental Feathure
+          </label>
+        </div>
       </div>
     </div>
   )
