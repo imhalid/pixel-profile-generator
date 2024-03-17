@@ -41,7 +41,7 @@ const BaseSetting = () => {
             onChange={e => dispatch(setImageUrl(e.target.value))}
           />
           <label className='experimental text-white'>
-            Experiemental Feathure
+            Experimental feathure
           </label>
         </div>
       </div>
