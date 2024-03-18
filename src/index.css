@@ -340,13 +340,13 @@ body {
   color: white;
   background-color: rgba(150, 0, 0);
   padding: 0 10px;
-  transition: 0.5s;
+  transition: 0.2s;
 }
 
 .backgroundUrl + .experimental {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .backgroundUrl:focus + .experimental {
-  visibility: visible;
+  opacity: 1;
 }
