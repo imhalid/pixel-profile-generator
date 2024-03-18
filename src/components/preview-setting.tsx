@@ -50,3 +50,8 @@ const BaseSetting = () => {
 }
 
 export default BaseSetting
+
+/**
+ * Add a small warning note for the label.
+ * If the warning message is not desired to be displayed again, an option should be provided with a button.
+ */

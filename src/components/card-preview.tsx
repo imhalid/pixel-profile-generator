@@ -113,3 +113,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
 }
 
 export default CardPreview
+
+/**
+ * Link is not required to be visible at first.
+ * Link preview can be visible.
+ * Previous made images can be visible up to 10.
+ */

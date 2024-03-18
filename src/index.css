@@ -334,6 +334,7 @@ body {
   font-size: 10px;
   top: 100%;
   left: 0;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
