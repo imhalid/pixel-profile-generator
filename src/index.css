@@ -336,7 +336,6 @@ body {
   display: flex;
   justify-content: left;
   align-items: flex-start;
-  background-color: rgba(150, 0, 0);
   padding: 45px 15px 10px 15px;
   transition: 0.2s;
 }
