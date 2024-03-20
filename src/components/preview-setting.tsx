@@ -4,8 +4,28 @@ import ColorPosition from './color-position'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserName, setImageUrl } from '../store/slices/preview-slice'
 import { RootState } from '../store/store'
+import { useEffect, useState } from 'react'
 
 const BaseSetting = () => {
+
+  const [showWarning, setShowWarning] = useState(true)
+  const [checkedShowWarning, setCheckedShowWarning] = useState(false)
+  useEffect(() => {
+    const warning = localStorage.getItem('dontShow')
+    if (warning) {
+      setShowWarning(Boolean(warning))
+    } else {
+      setShowWarning(false)
+    }
+  }, [])
+
+  const closeWarning = () => {
+    if (checkedShowWarning) {
+      localStorage.setItem('dontShow', 'true')
+    }
+    setShowWarning(false)
+  }
+
   const dispatch = useDispatch()
   const userName = useSelector((state: RootState) => state.preview.userName)
   const imageUrl = useSelector((state: RootState) => state.preview.imageUrl)
@@ -40,9 +60,32 @@ const BaseSetting = () => {
             value={imageUrl}
             onChange={e => dispatch(setImageUrl(e.target.value))}
           />
-          <label className='experimental text-white'>
-            Experimental feathure
-          </label>
+          {
+            showWarning && (
+              <label className='experimental text-red-100 flex text-left flex-col'>
+                <div className='absolute top-0 bg-red-900 px-3 py-2  right-0 flex justify-between w-full'>
+                  <div className='flex items-center gap-3'>
+                    <input
+                      type='checkbox'
+                      id='dontShow'
+                      className='custom-checkbox'
+                      onChange={() => setCheckedShowWarning(!checkedShowWarning)}
+                      checked={checkedShowWarning}
+                    />
+                    <label htmlFor='dontShow'>don't show this again</label>
+                  </div>
+                  <button
+                    onClick={closeWarning}
+                    className='px-1'>X</button>
+                </div>
+                <span className='text-base'>Warning!!</span>
+                <p className='mt-3'>
+                  Decrease the opacity of the colors so that the image you add is
+                  visible
+                </p>
+              </label>
+            )
+          }
         </div>
       </div>
     </div>

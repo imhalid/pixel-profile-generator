@@ -327,8 +327,6 @@ body {
 }
 
 .experimental {
-  width: fit-content;
-  height: 100%;
   z-index: 1;
   position: absolute;
   font-size: 10px;
@@ -336,11 +334,10 @@ body {
   left: 0;
   margin-top: 2px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
+  justify-content: left;
+  align-items: flex-start;
   background-color: rgba(150, 0, 0);
-  padding: 0 10px;
+  padding: 45px 15px 10px 15px;
   transition: 0.2s;
 }
 
