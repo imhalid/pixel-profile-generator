@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setUserName, setImageUrl } from '../store/slices/preview-slice'
 import { RootState } from '../store/store'
 import { useState } from 'react'
-
+import RadialGradientGenerator from './radial-gradient'
+import  {setGradientType}  from '../store/slices/preview-slice'
 const BaseSetting = () => {
 
   const [showWarning, setShowWarning] = useState(true)
@@ -16,15 +17,20 @@ const BaseSetting = () => {
   }
 
   const dispatch = useDispatch()
+  const preview = useSelector((state: RootState) => state.preview)
   const userName = useSelector((state: RootState) => state.preview.userName)
   const imageUrl = useSelector((state: RootState) => state.preview.imageUrl)
-
   const setting = useSelector((state: RootState) => state.setting)
+  
+  //setGradientType
   const customThemeIsAvailable = setting.themeName !== '--'
   return (
     <div className='relative flex lg:w-1/2 flex-col items-start justify-start gap-2 p-3 pt-5 ring-2 ring-white/50 base-setting'>
       <h1 className='absolute -top-3 bg-neutral-950 px-2'>Base</h1>
-      <div className='flex gap-2 flex-col w-full mb-2'>
+
+      <div className='flex gap-2 w-fit flex-wrap mb-2'>
+        
+
         <input
           type='text'
           className=' bg-white/10 p-2 text-white focus:outline-none focus:ring-2 focus:ring-white'
@@ -32,15 +38,55 @@ const BaseSetting = () => {
           value={userName}
           onChange={e => dispatch(setUserName(e.target.value))}
         />
+        <div className='flex'>
         <ColorsPopup />
+        <div className='flex flex-col w-fit text-xs leading-[18px] relative border text-start'>
+          <div className='flex '>
+            {['linear', 'radial'].map((type) => (
+              <div key={type} className='relative'>
+                <input
+                  type='radio'
+                  id={type}
+                  name='gradientType'
+                  value={type}
+                  checked={preview.gradientType === type}
+                  onChange={() => dispatch(setGradientType(type as "linear" | "radial"))}
+                  className='hidden'
+                />
+                <label
+                  htmlFor={type}
+                  className={`block cursor-pointer h-full p-1 capitalize ${
+                    preview.gradientType === type
+                      ? 'bg-white text-black'
+                      : 'transparent'
+                  }`}
+                >
+                  {type}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+        </div>
+
       </div>
       <div
         className={`w-full flex flex-col gap-2 ${
           customThemeIsAvailable ? 'opacity-30 pointer-events-none' : ''
         }`}
       >
-        <RotationAngle />
-        <ColorPosition />
+        {
+          preview.gradientType === 'linear' ? (
+            <>
+              <RotationAngle />
+              <ColorPosition />
+              </>
+          ) : (
+              <RadialGradientGenerator />
+
+          )
+        }
+        
         <div className='w-full relative'>
           <input
             type='text'

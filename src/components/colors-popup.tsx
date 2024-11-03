@@ -18,8 +18,8 @@ import { Dispatch } from '@reduxjs/toolkit'
 const Popovers = () => {
   return (
     <div className='flex items-center flex-wrap lg:flex-nowrap justify-between gap-2'>
-      <PopoverDemo type='firstColor' />
-      <PopoverDemo type='secondColor' />
+      {/* <PopoverDemo type='firstColor' />
+      <PopoverDemo type='secondColor' /> */}
       <PopoverDemo type='textColor' />
     </div>
   )

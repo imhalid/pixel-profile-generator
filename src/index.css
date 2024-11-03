@@ -347,3 +347,26 @@ body {
 .backgroundUrl:focus + .experimental {
   opacity: 1;
 }
+
+
+
+.color-palette-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  background-color: white;
+}
+.color-palette {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  background: 
+    linear-gradient(0deg in oklab, color(display-p3 1 0 0), color(display-p3 1 0 0 / 0) 50%),
+    linear-gradient(50deg in oklab, color(display-p3 1 0 1), color(display-p3 1 0 1 / 0) 50%),
+    linear-gradient(120deg in oklab, color(display-p3 0 0 1), color(display-p3 0 0 1 / 0) 50%),
+    linear-gradient(180deg in oklab, color(display-p3 0 1 1), color(display-p3 0 1 1 / 0) 50%),
+    linear-gradient(240deg in oklab, color(display-p3 0 1 0), color(display-p3 0 1 0 / 0) 50%),
+    linear-gradient(300deg in oklab, color(display-p3 1 1 0), color(display-p3 1 1 0 / 0) 50%);
+  
+}

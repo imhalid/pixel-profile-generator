@@ -1,57 +1,51 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/store'
-import { setTheme, SettingState } from '../store/slices/setting-slice'
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { setTheme, SettingState } from '../store/slices/setting-slice';
+import { useCallback } from 'react';
 
-const ThemeSelect2 = () => {
-  const dispatch = useDispatch()
+// Define themes array
+const themes: SettingState['themeName'][] = ['--', 'journey', 'road_trip', 'fuji', 'monica', 'summer', 'lax']
 
-  const previousTheme = () => {
-    const previousTheme = themes.indexOf(setting.themeName) - 1
-    if (previousTheme < 0) {
-      dispatch(setTheme(themes[themes.length - 1] as SettingState['themeName']))
-    } else {
-      dispatch(setTheme(themes[previousTheme] as SettingState['themeName']))
-    }
-  }
+const ThemeSelect: React.FC = () => {
+  const dispatch = useDispatch();
+  const setting = useSelector((state: RootState) => state.setting);
 
-  const nextTheme = () => {
-    const nextTheme = themes.indexOf(setting.themeName) + 1
-    if (nextTheme >= themes.length) {
-      dispatch(setTheme(themes[0] as SettingState['themeName']))
-    } else {
-      dispatch(setTheme(themes[nextTheme] as SettingState['themeName']))
-    }
-  }
+  const previousTheme = useCallback(() => {
+    const currentIndex = themes.indexOf(setting.themeName);
+    const newIndex = (currentIndex - 1 + themes.length) % themes.length;
+    dispatch(setTheme(themes[newIndex]));
+  }, [dispatch, setting.themeName]);
 
-  const setting = useSelector((state: RootState) => state.setting)
+  const nextTheme = useCallback(() => {
+    const currentIndex = themes.indexOf(setting.themeName);
+    const newIndex = (currentIndex + 1) % themes.length;
+    dispatch(setTheme(themes[newIndex]));
+  }, [dispatch, setting.themeName]);
+
   return (
-    <div className='flex flex-col text-xs mt-3 border-white border relative text-start'>
-      <p className='p-1 bg-white  text-center border-black text-black'>
-        Built in Themes
+    <div className="flex flex-col text-xs mt-3 border-white border h-fit relative text-start">
+      <p className="p-1 bg-white text-center border-black text-black">
+        Built-in Themes
       </p>
-      <div className='flex justify-between min-w-52 items-center'>
+      <div className="flex justify-between min-w-52 items-center">
         <button
-          className='px-2 py-1 bg-white m-1'
-          onClick={() => {
-            previousTheme()
-          }}
+          className="px-2 py-1 bg-white m-1"
+          onClick={previousTheme}
+          aria-label="Previous Theme"
         >
-          <div id='leftArrow'></div>
+          &#8592;
         </button>
-        {setting.themeName}
+        <span>{setting.themeName}</span>
         <button
-          className='px-2 py-1 bg-white m-1'
-          onClick={() => {
-            nextTheme()
-          }}
+          className="px-2 py-1 bg-white m-1"
+          onClick={nextTheme}
+          aria-label="Next Theme"
         >
-          <div id='rightArrow'></div>
+          &#8594;
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ThemeSelect2
-
-const themes = ['--', 'journey', 'road_trip', 'fuji', 'monica', 'summer', 'lax']
+export default ThemeSelect;

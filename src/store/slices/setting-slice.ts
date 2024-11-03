@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface BooleanSettingState {
   screenEffect: boolean
   pixelateAvatar: boolean
+  dithering: boolean
   includeAllCommits: boolean
 }
 
@@ -21,6 +22,7 @@ export interface SettingState extends BooleanSettingState {
 const initialState: SettingState = {
   screenEffect: true,
   pixelateAvatar: true,
+  dithering: true,
   includeAllCommits: true,
   themeName: '--',
   stats: [],

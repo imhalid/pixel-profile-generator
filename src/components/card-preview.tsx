@@ -12,7 +12,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
     'https://pixel-profile-ui.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=true&background=linear-gradient%280deg%2C+%23165a4cFF+0%25%2C+%2391db69FF+100%25%29&color=%23ffffffFF'
   )
 
-  const baseURL = 'https://pixel-profile-ui.vercel.app/api/github-stats?'
+  const baseURL = 'https://pixel-profile.vercel.app/api/github-stats?'
 
   const preview = useSelector((state: RootState) => state.preview)
   const setting = useSelector((state: RootState) => state.setting)
@@ -34,19 +34,31 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   //   return str;
   // };
 
-  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
 
+
+
+  /*
+  * add radial gradient editor with image
+  * improve gradient editor
+  * add dithering effect
+  * */
+
+  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
+  // `radial-gradient(circle at ${posX}% ${posY}%, ${stopsString})`
+  const radoalGradient = `radial-gradient(circle at ${preview.firstColorPosition}% ${preview.secondColorPosition}%, ${preview.gradientColor}) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
+  
   const createUrlWithParams = () => {
     const params = new URLSearchParams()
     params.append('username', username)
     setting.screenEffect &&
       params.append('screen_effect', setting.screenEffect.toString())
+    setting.dithering && params.append('dithering', setting.dithering.toString())
     setting.includeAllCommits &&
       params.append('include_all_commits', setting.includeAllCommits.toString())
     params.append('pixelate_avatar', setting.pixelateAvatar.toString())
 
     if (setting.themeName === '--') {
-      params.append('background', gradient)
+      params.append('background', radoalGradient)
     } else {
       params.append('theme', setting.themeName.toString())
     }

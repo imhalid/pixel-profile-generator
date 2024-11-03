@@ -12,6 +12,8 @@ export interface PreviewState {
   textColorOpacity: string
   userName: string
   imageUrl: string
+  gradientType?: 'linear' | 'radial'
+  gradientColor: string
 }
 
 const initialState: PreviewState = {
@@ -26,6 +28,8 @@ const initialState: PreviewState = {
   textColorOpacity: 'FF',
   userName: 'imhalid',
   imageUrl: '',
+  gradientType: 'radial',
+  gradientColor: 'radial-gradient(circle at 66% 34%, #3ddb82 0%, #1c1c45 100%)'
 }
 
 const previewSlice = createSlice({
@@ -64,6 +68,12 @@ const previewSlice = createSlice({
     },
     setImageUrl: (state, action: PayloadAction<string>) => {
       state.imageUrl = action.payload
+    },
+    setGradientType: (state, action: PayloadAction<'linear' | 'radial'>) => {
+      state.gradientType = action.payload
+    },
+    setGradnentColor: (state, action: PayloadAction<string>) => {
+      state.gradientColor = action.payload
     }
   },
 })
@@ -79,7 +89,9 @@ export const {
   setTextColor,
   setTextColorOpacity,
   setUserName,
-  setImageUrl
+  setImageUrl,
+  setGradientType,
+  setGradnentColor
 } = previewSlice.actions
 
 export default previewSlice.reducer
