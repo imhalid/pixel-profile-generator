@@ -11,6 +11,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   const [generatedUrl, setGeneratedUrl] = useState(
     'https://pixel-profile-ui.vercel.app/api/github-stats?username=imhalid&screen_effect=true&include_all_commits=true&pixelate_avatar=true&background=linear-gradient%280deg%2C+%23165a4cFF+0%25%2C+%2391db69FF+100%25%29&color=%23ffffffFF'
   )
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
 
   const baseURL = 'https://pixel-profile.vercel.app/api/github-stats?'
 
@@ -100,6 +101,34 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
         </div>
       </div>
       <div className='mt-4'>
+        <div className='flex items-center gap-4 mb-4'>
+          <label
+            className={`block cursor-pointer p-1 border-b-4 border-black rounded transition-all ${colorScheme === 'light' ? 'bg-white text-black' : 'bg-transparent'}`}
+          >
+            <input
+              type='radio'
+              name='color-scheme'
+              value='light'
+              checked={colorScheme === 'light'}
+              onChange={() => setColorScheme('light')}
+              className='hidden'
+            />
+            Light
+          </label>
+          <label
+            className={`block cursor-pointer p-1 border-b-4 border-black rounded transition-all ${colorScheme === 'dark' ? 'bg-white text-black' : 'bg-transparent'}`}
+          >
+            <input
+              type='radio'
+              name='color-scheme'
+              value='dark'
+              checked={colorScheme === 'dark'}
+              onChange={() => setColorScheme('dark')}
+              className='hidden'
+            />
+            Dark
+          </label>
+        </div>
         <button
           className='w-fit px-5 bg-white h-10 text-black active:translate-y-[2px]'
           onClick={handleGenerateClick}
@@ -108,12 +137,13 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
         </button>
         <div className='flex items-center gap-4 mt-5 border-t pt-4'>
           <code className='text-left text-xs flex overflow-hidden break-all'>
-            {createUrlWithParams()}
+            {`<source media="(prefers-color-scheme: ${colorScheme})" srcset="${createUrlWithParams()}">`}
           </code>
           <button
             className='active:translate-y-[2px]'
             onClick={() => {
-              navigator.clipboard.writeText(createUrlWithParams())
+              const sourceTag = `<source media=\"(prefers-color-scheme: ${colorScheme})\" srcset=\"${createUrlWithParams()}\">`;
+              navigator.clipboard.writeText(sourceTag)
             }}
           >
             Copy
