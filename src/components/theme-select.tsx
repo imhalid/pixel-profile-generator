@@ -4,7 +4,7 @@ import { setTheme, SettingState } from '../store/slices/setting-slice';
 import { useCallback } from 'react';
 
 // Define themes array
-const themes: SettingState['themeName'][] = ['--', 'journey', 'road_trip', 'fuji', 'monica', 'summer', 'lax']
+const themes: SettingState['themeName'][] = ['--', 'journey', 'road_trip', 'fuji', 'monica', 'summer', 'lax', 'crt']
 
 const ThemeSelect: React.FC = () => {
   const dispatch = useDispatch();

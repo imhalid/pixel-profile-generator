@@ -1,38 +1,31 @@
 import React, { useState, useRef, useEffect, SVGProps } from 'react';
 import { generateRandomColor } from '../utils/randomcolor';
 import ColorPicker from './color-picker';
-import { setGradientColor, setRadialFirstColorPosition, setRadialSecondColorPosition } from '../store/slices/preview-slice';
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/store'
-const RadialGradientGenerator = () => {
-  // States
+import { setGradientColor, setRotation } from '../store/slices/preview-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import RotationAngle from './rotation-angle';
+
+const LinearGradientGenerator = () => {
   const [colorStops, setColorStops] = useState([
     { color: '#3ddb82', position: 0 },
     { color: '#1c1c45', position: 100 }
   ]);
-  const [posX, setPosX] = useState(50);
-  const [posY, setPosY] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [draggedStop, setDraggedStop] = useState<number | null>(null);
   const [isRepositioning, setIsRepositioning] = useState(false);
-
-
-  const dispatch = useDispatch()
-  const preview = useSelector((state: RootState) => state.preview)
-  // Refs
-  const controlAreaRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement | null>(null);
   const colorPickerRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
   const dragStartPosRef = useRef({ x: 0, y: 0 });
   const isDraggingRef = useRef(false);
+  const dispatch = useDispatch();
+  const preview = useSelector((state: RootState) => state.preview);
 
   const findOptimalPosition = () => {
     if (colorStops.length < 2) return 50;
-
     const sortedStops = [...colorStops].sort((a, b) => a.position - b.position);
     let maxGap = 0;
     let optimalPosition = 50;
-
     for (let i = 0; i < sortedStops.length - 1; i++) {
       const gap = sortedStops[i + 1].position - sortedStops[i].position;
       if (gap > maxGap) {
@@ -40,7 +33,6 @@ const RadialGradientGenerator = () => {
         optimalPosition = sortedStops[i].position + gap / 2;
       }
     }
-
     return Math.round(optimalPosition);
   };
 
@@ -49,20 +41,7 @@ const RadialGradientGenerator = () => {
     const stopsString = sortedStops
       .map(stop => `${stop.color} ${stop.position}%`)
       .join(', ');
-    return `radial-gradient(circle at ${posX}% ${posY}%, ${stopsString})`;
-  };
-
-  const generateLinearGradientString = () => {
-    const sortedStops = [...colorStops].sort((a, b) => a.position - b.position);
-    const stopsString = sortedStops
-      .map(stop => `${stop.color} ${stop.position}%`)
-      .join(', ');
-    return `linear-gradient(to right, ${stopsString})`;
-  };
-
-  const handlePositionMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    updatePosition(e);
+    return `linear-gradient(${preview.rotation || 90}deg, ${stopsString})`;
   };
 
   const handleMouseUp = () => {
@@ -72,9 +51,6 @@ const RadialGradientGenerator = () => {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) {
-      updatePosition(e);
-    }
     if (!(draggedStop !== null && sliderRef.current)) {
       return;
     }
@@ -82,32 +58,13 @@ const RadialGradientGenerator = () => {
     const rect = sliderRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
     const percentage = (x / rect.width) * 100;
-
     const newStops = colorStops.map((stop, index) => {
       if (index === draggedStop) {
         return { ...stop, position: Math.round(percentage) };
       }
       return stop;
     });
-    
     setColorStops(newStops);
-  };
-
-  const updatePosition = (e: React.MouseEvent<HTMLDivElement> | MouseEvent) => {
-    if (!controlAreaRef.current) {
-      return;
-    }
-    const rect = controlAreaRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const newPosX = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    const newPosY = Math.max(0, Math.min(100, (y / rect.height) * 100));
-    
-    dispatch(setRadialFirstColorPosition(Math.round(newPosX)));
-    dispatch(setRadialSecondColorPosition(Math.round(newPosY)));
-    setPosX(Math.round(newPosX));
-    setPosY(Math.round(newPosY));
   };
 
   const handleStopMouseDown = (
@@ -115,21 +72,15 @@ const RadialGradientGenerator = () => {
     index: number
   ): void => {
     e.stopPropagation();
-
-    // Store initial position
     dragStartPosRef.current = { x: e.clientX, y: e.clientY };
     isDraggingRef.current = false;
-
     const handleMouseMove = (moveEvent: MouseEvent): void => {
-      // Calculate distance moved
       const deltaX: number = Math.abs(
         moveEvent.clientX - dragStartPosRef.current.x
       );
       const deltaY: number = Math.abs(
         moveEvent.clientY - dragStartPosRef.current.y
       );
-
-      // If moved more than 5px, consider it a drag
       if (!(deltaX > 5 || deltaY > 5)) {
         return;
       }
@@ -138,12 +89,9 @@ const RadialGradientGenerator = () => {
       setIsRepositioning(true);
       document.removeEventListener('mousemove', handleMouseMove);
     };
-
     const handleMouseUp = (upEvent: MouseEvent): void => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
-
-      // If it wasn't a drag, treat it as a click
       if (
         !isDraggingRef.current &&
         colorPickerRefs.current[index] &&
@@ -151,40 +99,34 @@ const RadialGradientGenerator = () => {
       ) {
         colorPickerRefs.current[index]?.click();
       }
-
-      // Reset dragging state
       setTimeout((): void => {
         setDraggedStop(null);
         setIsRepositioning(false);
         isDraggingRef.current = false;
       }, 0);
     };
-
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
   useEffect(() => {
-    if (!(isDragging || draggedStop !== null)) {
-      return;
+    if (draggedStop !== null) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
     }
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, draggedStop]);
+  }, [draggedStop]);
 
   useEffect(() => {
     dispatch(setGradientColor(generateGradientString()));
-  }, [colorStops, posX, posY]);
+  }, [colorStops, preview.rotation]);
 
   const addColorStop = () => {
     const newPosition = findOptimalPosition();
     const newColor = generateRandomColor();
-    dispatch(setGradientColor(generateGradientString()))
     setColorStops([...colorStops, { color: newColor, position: newPosition }]);
   };
 
@@ -198,61 +140,39 @@ const RadialGradientGenerator = () => {
 
   const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!sliderRef.current || draggedStop !== null) return;
-
     const rect = sliderRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const percentage = Math.round((x / rect.width) * 100);
-
     const closestStopIndex = findClosestStop(percentage);
     const newStops = [...colorStops];
     newStops[closestStopIndex] = { ...newStops[closestStopIndex], position: percentage };
     setColorStops(newStops);
   };
 
+  const handleRotationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setRotation(Number(e.target.value)));
+  };
+
   return (
     <div className="w-full max-w-2xl">
       <div>
         <div className="space-y-6">
-          {/* Combined Preview and Position Control */}
+          {/* Rotation Slider */}
+          <RotationAngle />
+          {/* Preview */}
           <div className="space-y-2">
             <div
-              ref={controlAreaRef}
-              className="relative w-full h-[150px] cursor-crosshair"
+              className="relative w-full h-[60px] rounded border border-white/30"
               style={{ background: generateGradientString() }}
-              onMouseDown={handlePositionMouseDown}
-            >
-              {/* Grid Lines */}
-              <div className="absolute w-full h-full">
-                <div className="absolute left-1/4 mix-blend-overlay top-0 w-px h-full bg-white/50" />
-                <div className="absolute left-1/2 mix-blend-overlay top-0 w-px h-full bg-white/50" />
-                <div className="absolute left-3/4 mix-blend-overlay top-0 w-px h-full bg-white/50" />
-                <div className="absolute top-1/4 mix-blend-overlay left-0 h-px w-full bg-white/50" />
-                <div className="absolute top-1/2 mix-blend-overlay left-0 h-px w-full bg-white/50" />
-                <div className="absolute top-3/4 mix-blend-overlay left-0 h-px w-full bg-white/50" />
-              </div>
-
-              {/* Position Indicator */}
-              <div
-                className="absolute w-4 h-4 -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-black shadow-md"
-                style={{
-                  left: `${posX}%`,
-                  top: `${posY}%`,
-                  cursor: isDragging ? 'grabbing' : 'grab',
-                  userSelect: 'none'
-                }}
-              />
-            </div>
+            />
           </div>
-
           {/* Color Stops */}
           <div className="space-y-4">
-
-
             {/* Position Slider */}
             <div
               ref={sliderRef}
               className="relative h-5 select-none"
-              style={{ background: generateLinearGradientString() }}
+              style={{ background: generateGradientString() }}
               onClick={handleSliderClick}
             >
               {colorStops.map((stop, index) => (
@@ -284,7 +204,6 @@ const RadialGradientGenerator = () => {
                       />
                     )}
                     {/* Position indicator */}
-
                     <div className="absolute top-5 left-1/2 -translate-x-1/2 text-xs text-gray-600 whitespace-nowrap">
                       {stop.position}%
                     </div>
@@ -297,12 +216,10 @@ const RadialGradientGenerator = () => {
                 onClick={addColorStop}
                 className="flex items-center gap-1 bg-white text-black px-1"
               >
-
                 Add Color
               </button>
             </div>
             <div className='flex flex-wrap gap-2'>
-
               {colorStops.map((stop, index) => (
                 <div key={index} className="flex items-center gap-1 bg-neutral-800 px-1">
                   <ColorPicker
@@ -313,23 +230,20 @@ const RadialGradientGenerator = () => {
                       setColorStops(newStops);
                     }}
                   />
-                  {
-                    colorStops.length > 2 && (
-                      <button
-                        onClick={() => {
-                          const newStops = colorStops.filter((_, i) => i !== index);
-                          setColorStops(newStops);
-                        }}
-                        className=" hover:text-red-500 text-red-100/50 rounded"
-                      >
-                        <PixelarticonsTrash className="w-5 h-5" />
-                      </button>
-                    )
-                  }
+                  {colorStops.length > 2 && (
+                    <button
+                      onClick={() => {
+                        const newStops = colorStops.filter((_, i) => i !== index);
+                        setColorStops(newStops);
+                      }}
+                      className=" hover:text-red-500 text-red-100/50 rounded"
+                    >
+                      <PixelarticonsTrash className="w-5 h-5" />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       </div>
@@ -337,10 +251,10 @@ const RadialGradientGenerator = () => {
   );
 };
 
-export default RadialGradientGenerator;
+export default LinearGradientGenerator;
 
 export function PixelarticonsTrash(props: SVGProps<SVGSVGElement>) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M16 2v4h6v2h-2v14H4V8H2V6h6V2zm-2 2h-4v2h4zm0 4H6v12h12V8zm-5 2h2v8H9zm6 0h-2v8h2z" /></svg>
-  )
-}
+  );
+} 

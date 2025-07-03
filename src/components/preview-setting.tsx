@@ -6,13 +6,13 @@ import { setUserName, setImageUrl } from '../store/slices/preview-slice'
 import { RootState } from '../store/store'
 import { useState } from 'react'
 import RadialGradientGenerator from './radial-gradient'
+import LinearGradientGenerator from './linear-gradient'
 import  {setGradientType}  from '../store/slices/preview-slice'
 const BaseSetting = () => {
 
   const [showWarning, setShowWarning] = useState(true)
 
   const closeWarning = () => {
-    console.log('closeWarning')
     setShowWarning(false)
   }
 
@@ -77,13 +77,9 @@ const BaseSetting = () => {
       >
         {
           preview.gradientType === 'linear' ? (
-            <>
-              <RotationAngle />
-              <ColorPosition />
-              </>
+            <LinearGradientGenerator />
           ) : (
               <RadialGradientGenerator />
-
           )
         }
         

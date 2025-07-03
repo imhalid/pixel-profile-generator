@@ -7,6 +7,9 @@ export interface BooleanSettingState {
   includeAllCommits: boolean
 }
 
+// Valid hide keys for stats
+export type HideStatKey = 'avatar' | 'commits' | 'contributions' | 'issues' | 'prs' | 'rank' | 'stars';
+
 export interface SettingState extends BooleanSettingState {
   themeName:
   | '--'
@@ -16,7 +19,8 @@ export interface SettingState extends BooleanSettingState {
   | 'monica'
   | 'summer'
   | 'lax'
-  stats: string[]
+  | 'crt'
+  stats: HideStatKey[]
 }
 
 const initialState: SettingState = {
@@ -25,7 +29,7 @@ const initialState: SettingState = {
   dithering: true,
   includeAllCommits: true,
   themeName: '--',
-  stats: [],
+  stats: [], // Only valid: 'avatar', 'commits', 'contributions', 'issues', 'prs', 'rank', 'stars'
 }
 
 const setting = createSlice({

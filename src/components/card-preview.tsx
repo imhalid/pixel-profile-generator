@@ -43,10 +43,10 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
   * add dithering effect
   * */
 
-  const gradient = `linear-gradient(${preview.rotation}deg, ${preview.firstColor}${preview.firstColorOpacity} ${preview.firstColorPosition}%, ${preview.secondColor}${preview.secondColorOpacity} ${preview.secondColorPosition}%) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
-  // `radial-gradient(circle at ${posX}% ${posY}%, ${stopsString})`
-  const radoalGradient = `radial-gradient(circle at ${preview.firstColorPosition}% ${preview.secondColorPosition}%, ${preview.gradientColor}) ${preview.imageUrl && `, url(${preview.imageUrl})`}`
-  
+  // Gradient stringlerini oluştur
+  const linearGradient = preview.gradientColor + (preview.imageUrl ? `, url(${preview.imageUrl})` : '');
+  const radialGradient = preview.gradientColor + (preview.imageUrl ? `, url(${preview.imageUrl})` : '');
+
   const createUrlWithParams = () => {
     const params = new URLSearchParams()
     params.append('username', username)
@@ -58,7 +58,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ username }) => {
     params.append('pixelate_avatar', setting.pixelateAvatar.toString())
 
     if (setting.themeName === '--') {
-      params.append('background', radoalGradient)
+      params.append('background', preview.gradientType === 'linear' ? linearGradient : radialGradient)
     } else {
       params.append('theme', setting.themeName.toString())
     }
