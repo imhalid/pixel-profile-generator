@@ -1,6 +1,4 @@
 import ColorsPopup from './colors-popup'
-import RotationAngle from './rotation-angle'
-import ColorPosition from './color-position'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserName, setImageUrl } from '../store/slices/preview-slice'
 import { RootState } from '../store/store'

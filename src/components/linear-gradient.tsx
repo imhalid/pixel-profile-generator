@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, SVGProps } from 'react';
 import { generateRandomColor } from '../utils/randomcolor';
 import ColorPicker from './color-picker';
-import { setGradientColor, setRotation } from '../store/slices/preview-slice';
+import { setGradientColor } from '../store/slices/preview-slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import RotationAngle from './rotation-angle';
@@ -11,7 +11,7 @@ const LinearGradientGenerator = () => {
     { color: '#3ddb82', position: 0 },
     { color: '#1c1c45', position: 100 }
   ]);
-  const [isDragging, setIsDragging] = useState(false);
+  const [, setIsDragging] = useState(false);
   const [draggedStop, setDraggedStop] = useState<number | null>(null);
   const [isRepositioning, setIsRepositioning] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
@@ -147,10 +147,6 @@ const LinearGradientGenerator = () => {
     const newStops = [...colorStops];
     newStops[closestStopIndex] = { ...newStops[closestStopIndex], position: percentage };
     setColorStops(newStops);
-  };
-
-  const handleRotationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setRotation(Number(e.target.value)));
   };
 
   return (

@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect, SVGProps } from 'react';
 import { generateRandomColor } from '../utils/randomcolor';
 import ColorPicker from './color-picker';
 import { setGradientColor, setRadialFirstColorPosition, setRadialSecondColorPosition } from '../store/slices/preview-slice';
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/store'
+import { useDispatch } from 'react-redux'
 const RadialGradientGenerator = () => {
   // States
   const [colorStops, setColorStops] = useState([
@@ -18,7 +17,6 @@ const RadialGradientGenerator = () => {
 
 
   const dispatch = useDispatch()
-  const preview = useSelector((state: RootState) => state.preview)
   // Refs
   const controlAreaRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement | null>(null);
