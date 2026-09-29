@@ -191,6 +191,20 @@ const EYE_ICON_ROWS = [
 ]
 export const EyeIcon = (p: IconProps) => <PixelIcon rows={EYE_ICON_ROWS} {...p} />
 
+const DROPPER_ICON_ROWS = [
+  '.......##.',
+  '......####',
+  '.....#####',
+  '....####..',
+  '...#.##...',
+  '..#.#.....',
+  '.#.#......',
+  '#.#.......',
+  '##........',
+  '..........',
+]
+export const DropperIcon = (p: IconProps) => <PixelIcon rows={DROPPER_ICON_ROWS} {...p} />
+
 export const TorchIcon = ({ className = '', ...p }: IconProps) => (
   <svg viewBox='0 0 16 24' width='16' height='24' shapeRendering='crispEdges' aria-hidden className={className} {...p}>
     <g className='torch-flame'>

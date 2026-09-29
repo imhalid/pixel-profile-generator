@@ -375,33 +375,49 @@ const GradientEditor = () => {
       </div>
 
       {selected && (
-        <div className='px-inset flex flex-wrap gap-4 p-3'>
+        <div className='px-inset flex flex-col gap-4 p-4'>
+          <div className='flex flex-wrap items-center gap-3'>
+            <span
+              className='checker relative h-6 w-6 shrink-0'
+              style={{ boxShadow: '0 0 0 2px var(--void), 0 0 0 4px var(--torch)' }}
+            >
+              <span className='absolute inset-0' style={{ background: selected.color }} />
+            </span>
+            <span className='text-[8px] text-parchment'>
+              Stop {sortStops(g.stops).findIndex(s => s.id === selected.id) + 1}
+              <span className='text-stone-500'> / {g.stops.length}</span>
+            </span>
+            <div className='ml-auto flex items-center gap-3'>
+              <NumberField
+                label='Pos'
+                value={selected.position}
+                min={0}
+                max={100}
+                suffix='%'
+                onChange={position => dispatch(updateStop({ id: selected.id, position }))}
+              />
+              <button
+                type='button'
+                className='px-btn px-btn-danger px-btn-sm !p-2'
+                disabled={g.stops.length <= 2}
+                title={g.stops.length <= 2 ? 'A gradient needs at least two stops' : 'Remove this stop'}
+                aria-label='Remove stop'
+                onClick={() => dispatch(removeStop(selected.id))}
+              >
+                <TrashIcon className='h-3.5 w-3.5' />
+              </button>
+            </div>
+          </div>
           <ColorEditor
+            key={selected.id}
+            className='w-full'
             value={selected.color}
+            related={g.stops.map(s => s.color)}
             onChange={color => dispatch(updateStop({ id: selected.id, color }))}
           />
-          <div className='flex min-w-[140px] flex-1 flex-col gap-3'>
-            <span className='px-label !mb-0'>Selected stop</span>
-            <NumberField
-              label='Pos'
-              value={selected.position}
-              min={0}
-              max={100}
-              suffix='%'
-              onChange={position => dispatch(updateStop({ id: selected.id, position }))}
-            />
-            <button
-              type='button'
-              className='px-btn px-btn-danger px-btn-sm self-start'
-              disabled={g.stops.length <= 2}
-              onClick={() => dispatch(removeStop(selected.id))}
-            >
-              <TrashIcon /> Remove
-            </button>
-            <p className='text-[7px] leading-relaxed text-stone-500'>
-              Lower the opacity of stops to let a background image show through.
-            </p>
-          </div>
+          <p className='text-[7px] leading-relaxed text-stone-500'>
+            Tip: lower the opacity of stops to let a background image show through.
+          </p>
         </div>
       )}
 

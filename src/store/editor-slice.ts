@@ -148,6 +148,14 @@ const editor = createSlice({
         state.selectedStop[s] = state.cards[s].gradient.stops[0]?.id ?? null
       }
     },
+    /** Turns off the options the public API currently can't render. */
+    disableHeavyEffects: state => {
+      editCards(state, c => {
+        c.screenEffect = false
+        if (c.cardType === 'crt') c.cardType = 'stats'
+        if (c.theme === 'crt') c.theme = null
+      })
+    },
     resetCard: state => {
       const fresh = defaultCard()
       editCards(state, c => Object.assign(c, structuredClone(fresh)))
@@ -171,6 +179,7 @@ export const {
   removeStop,
   reverseStops,
   restoreCard,
+  disableHeavyEffects,
   resetCard,
 } = editor.actions
 

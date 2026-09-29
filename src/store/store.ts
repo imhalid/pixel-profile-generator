@@ -2,15 +2,24 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import editorReducer, { EditorState, initialEditorState } from './editor-slice'
 
-const STORAGE_KEY = 'pixel-profile-generator:editor:v2'
+const STORAGE_KEY = 'pixel-profile-generator:editor:v3'
+// v2 saved the screen effect switched on by default, which the public API
+// can't render (LuciNyan/pixel-profile#63). Carry it over with the effect off.
+const LEGACY_KEY = 'pixel-profile-generator:editor:v2'
 
 // Remembering the last card is a per-browser convenience, so any storage
 // failure (private mode, quota, old shape) just falls back to defaults.
 const loadEditor = (): EditorState | undefined => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const legacy = !localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_KEY)
     if (!raw) return undefined
     const saved = JSON.parse(raw) as EditorState
+    if (legacy) {
+      localStorage.removeItem(LEGACY_KEY)
+      if (saved.cards?.light) saved.cards.light.screenEffect = false
+      if (saved.cards?.dark) saved.cards.dark.screenEffect = false
+    }
     const base = initialEditorState()
     return {
       ...base,

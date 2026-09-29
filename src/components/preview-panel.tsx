@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Scheme, isHeavyCard } from '../lib/card-config'
-import { setScheme } from '../store/editor-slice'
+import { disableHeavyEffects, setScheme } from '../store/editor-slice'
 import { useActiveCard, useAppDispatch, useAppSelector } from '../store/store'
 import { useSession } from './session-context'
 import { Panel } from './ui'
@@ -71,11 +71,13 @@ const ErrorOverlay = ({
   hint,
   scheme,
   onRetry,
+  onFix,
 }: {
   message: string
   hint?: string
   scheme: Scheme
   onRetry: () => void
+  onFix?: () => void
 }) => (
   // The veil takes the README color so the dialog reads the same on both themes.
   <div
@@ -89,9 +91,16 @@ const ErrorOverlay = ({
       </div>
       <p className='text-[8px] leading-[1.9] text-parchment'>{message}</p>
       {hint && <p className='mt-2 text-[7px] leading-[1.9] text-torch'>{hint}</p>}
-      <button type='button' className='px-btn px-btn-torch px-btn-sm mt-4' onClick={onRetry}>
-        <ReloadIcon /> Try again
-      </button>
+      <div className='mt-4 flex flex-wrap gap-2'>
+        {onFix && (
+          <button type='button' className='px-btn px-btn-torch px-btn-sm' onClick={onFix}>
+            Turn off &amp; retry
+          </button>
+        )}
+        <button type='button' className={`px-btn px-btn-sm ${onFix ? 'px-btn-ghost' : 'px-btn-torch'}`} onClick={onRetry}>
+          <ReloadIcon /> Try again
+        </button>
+      </div>
     </div>
   </div>
 )
@@ -175,9 +184,22 @@ const PreviewPanel = () => {
               {status === 'error' && error && (
                 <ErrorOverlay
                   message={error}
-                  hint={isHeavyCard(card) ? 'Screen effect and CRT often time out on the public API. Turn them off, or use the GitHub Action snippet.' : undefined}
+                  hint={
+                    isHeavyCard(card)
+                      ? 'Screen effect and the CRT card/theme are broken on the public API right now (pixel-profile issue #63).'
+                      : undefined
+                  }
                   scheme={scheme}
                   onRetry={generate}
+                  onFix={
+                    isHeavyCard(card)
+                      ? () => {
+                          dispatch(disableHeavyEffects())
+                          // Let the store settle so the retry uses the new settings.
+                          window.setTimeout(generate, 0)
+                        }
+                      : undefined
+                  }
                 />
               )}
             </div>

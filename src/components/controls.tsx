@@ -191,7 +191,7 @@ export const StylePanel = () => {
         </div>
 
         <div className={`grid gap-x-4 gap-y-1 sm:grid-cols-2 ${crt ? 'pointer-events-none opacity-40' : ''}`}>
-          <Toggle label='Screen effect' hint='slow · may time out on public API' checked={card.screenEffect} onChange={v => dispatch(updateCard({ screenEffect: v }))} />
+          <Toggle label='Screen effect' hint='broken on public API (issue #63)' checked={card.screenEffect} onChange={v => dispatch(updateCard({ screenEffect: v }))} />
           <Toggle label='Dithering' hint='256 color palette' checked={card.dithering} onChange={v => dispatch(updateCard({ dithering: v }))} />
           <Toggle label='Pixelate avatar' checked={card.pixelateAvatar} onChange={v => dispatch(updateCard({ pixelateAvatar: v }))} />
           <Toggle label='Avatar border' checked={card.avatarBorder} onChange={v => dispatch(updateCard({ avatarBorder: v }))} />
