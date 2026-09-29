@@ -1,184 +1,224 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState, PointerEvent as ReactPointerEvent } from 'react'
+import {
+  clamp,
+  hexToRgba,
+  hsvToRgb,
+  normalizeHex,
+  rgbToHsv,
+  rgbaToHex,
+} from '../lib/gradient'
 
-interface ColorPickerProps {
-  color: string;  // Now expects rgba hex format (#rrggbbaa)
-  onChange: (color: string) => void;
+const SWATCHES = [
+  '#050505', '#1f1f1f', '#4a4a4a', '#a09a90', '#ece6da', '#ffffff',
+  '#e0484f', '#e0582b', '#f5a524', '#ffe08a', '#8bd46b', '#1f6b3a',
+  '#6fd0e8', '#6fb7ff', '#2b4c7e', '#7b3fa0', '#e08bd6', '#165a4c',
+]
+
+type Hsva = { h: number; s: number; v: number; a: number }
+
+const hexToHsva = (hex: string): Hsva => {
+  const { r, g, b, a } = hexToRgba(hex)
+  return { ...rgbToHsv(r, g, b), a }
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
+const hsvaToHex = ({ h, s, v, a }: Hsva) => {
+  const { r, g, b } = hsvToRgb(h, s, v)
+  return rgbaToHex(r, g, b, a)
+}
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+/** Drag helper: pointer capture keeps the drag alive outside the element. */
+const useDrag = (onMove: (x: number, y: number) => void) => {
+  const handlers = {
+    onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
+      e.currentTarget.setPointerCapture(e.pointerId)
+      move(e)
+    },
+    onPointerMove: (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) move(e)
+    },
+  }
+  const move = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    onMove(
+      clamp((e.clientX - r.left) / r.width, 0, 1),
+      clamp((e.clientY - r.top) / r.height, 0, 1)
+    )
+  }
+  return handlers
+}
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-  
-  // Convert hex to HSLA
-  const hexToHSLA = useCallback((hex: string) => {
-    let r = parseInt(hex.slice(1, 3), 16) / 255;
-    let g = parseInt(hex.slice(3, 5), 16) / 255;
-    let b = parseInt(hex.slice(5, 7), 16) / 255;
-    let a = parseInt(hex.slice(7, 9) || 'ff', 16) / 255;
+export const ColorEditor = ({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (hex: string) => void
+}) => {
+  const [hsva, setHsva] = useState(() => hexToHsva(value))
+  const [text, setText] = useState(value)
+  const [lastValue, setLastValue] = useState(value)
 
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0, s, l = (max + min) / 2;
+  // Follow outside changes without losing hue when the color is grey.
+  if (value !== lastValue) {
+    setLastValue(value)
+    setText(value)
+    if (hsvaToHex(hsva) !== value) setHsva(hexToHsva(value))
+  }
 
-    if (max === min) {
-      h = s = 0;
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-      }
-      h /= 6;
-    }
+  const commit = (next: Hsva) => {
+    setHsva(next)
+    onChange(hsvaToHex(next))
+  }
 
-    return { h: h * 360, s: s * 100, l: l * 100, a: a };
-  }, []);
+  const sv = useDrag((x, y) => commit({ ...hsva, s: x, v: 1 - y }))
+  const hue = useDrag(x => commit({ ...hsva, h: x * 360 }))
+  const alpha = useDrag(x => commit({ ...hsva, a: Math.round(x * 100) / 100 }))
 
-  const [hsla, setHSLA] = useState(() => hexToHSLA(color));
-
-  const handleSaturationLightnessChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isOpen) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-
-    const s = x * 100;
-    const l = (100 - y * 100);
-
-    setHSLA(prev => ({ ...prev, s, l }));
-    onChange(HSLAToHex(hsla.h, s, l, hsla.a));
-  };
-
-  const handleHueChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isOpen) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const h = x * 360;
-
-    setHSLA(prev => ({ ...prev, h }));
-    onChange(HSLAToHex(h, hsla.s, hsla.l, hsla.a));
-  };
-
-  const handleAlphaChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isOpen) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    setHSLA(prev => ({ ...prev, a: x }));
-    onChange(HSLAToHex(hsla.h, hsla.s, hsla.l, x));
-  };
-
-  const HSLAToHex = (h: number, s: number, l: number, a: number): string => {
-    s /= 100;
-    l /= 100;
-    const f = (n: number) => {
-      const k = (n + h / 30) % 12;
-      const color = l - s * Math.min(l, 1 - l) * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-      return Math.round(255 * color).toString(16).padStart(2, '0');
-    };
-    const alpha = Math.round(a * 255).toString(16).padStart(2, '0');
-    return `#${f(0)}${f(8)}${f(4)}${alpha}`;
-  };
+  const opaque = hsvaToHex({ ...hsva, a: 1 }).slice(0, 7)
 
   return (
-    <div className="relative pt-0.5" ref={pickerRef}>
-      <button
-        className="w-4 h-4 relative"
-        style={{ backgroundColor: color.slice(0, 7) }}
-        onClick={() => setIsOpen(!isOpen)}
+    <div className='flex w-56 flex-col gap-3'>
+      <div
+        {...sv}
+        className='relative h-32 w-full cursor-crosshair touch-none'
+        style={{
+          background: `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${hsva.h} 100% 50%))`,
+          boxShadow: '0 0 0 2px var(--stone-600)',
+        }}
       >
-        <div 
-          className="absolute inset-0 border border-white/50"
-          style={{ 
-            backgroundColor: color,
-            // backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==")'
-          }} 
+        <div
+          className='pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2'
+          style={{
+            left: `${hsva.s * 100}%`,
+            top: `${(1 - hsva.v) * 100}%`,
+            background: opaque,
+            boxShadow: '0 0 0 2px #fff, 0 0 0 4px #000',
+          }}
         />
+      </div>
+
+      <div
+        {...hue}
+        aria-label='Hue'
+        className='relative h-4 w-full cursor-pointer touch-none'
+        style={{
+          background:
+            'linear-gradient(90deg,#f00,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00)',
+          boxShadow: '0 0 0 2px var(--stone-600)',
+        }}
+      >
+        <div
+          className='pointer-events-none absolute -top-1 h-6 w-2 -translate-x-1/2 bg-parchment'
+          style={{ left: `${(hsva.h / 360) * 100}%`, boxShadow: '0 0 0 2px #000' }}
+        />
+      </div>
+
+      <div
+        {...alpha}
+        aria-label='Opacity'
+        className='checker relative h-4 w-full cursor-pointer touch-none'
+        style={{ boxShadow: '0 0 0 2px var(--stone-600)' }}
+      >
+        <div
+          className='absolute inset-0'
+          style={{ background: `linear-gradient(90deg, transparent, ${opaque})` }}
+        />
+        <div
+          className='pointer-events-none absolute -top-1 h-6 w-2 -translate-x-1/2 bg-parchment'
+          style={{ left: `${hsva.a * 100}%`, boxShadow: '0 0 0 2px #000' }}
+        />
+      </div>
+
+      <div className='flex items-center gap-2'>
+        <input
+          className='px-input !p-2 !text-[9px] uppercase'
+          value={text}
+          spellCheck={false}
+          aria-label='Hex color'
+          onChange={e => {
+            setText(e.target.value)
+            const hex = normalizeHex(e.target.value)
+            if (hex) onChange(hex)
+          }}
+          onBlur={() => setText(value)}
+        />
+        <span className='w-12 shrink-0 text-right text-[9px] text-dim'>
+          {Math.round(hsva.a * 100)}%
+        </span>
+      </div>
+
+      <div className='grid grid-cols-9 gap-1.5'>
+        {SWATCHES.map(c => (
+          <button
+            key={c}
+            type='button'
+            title={c}
+            aria-label={`Use ${c}`}
+            className='aspect-square w-full hover:scale-110'
+            style={{ background: c, boxShadow: '0 0 0 2px var(--stone-900)' }}
+            onClick={() => commit({ ...hexToHsva(c), a: hsva.a })}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/** Swatch button that opens a ColorEditor popover. */
+const ColorPicker = ({
+  value,
+  onChange,
+  label,
+  align = 'left',
+  size = 'md',
+}: {
+  value: string
+  onChange: (hex: string) => void
+  label: string
+  align?: 'left' | 'right'
+  size?: 'sm' | 'md'
+}) => {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  const dim = size === 'sm' ? 'h-6 w-6' : 'h-8 w-8'
+
+  return (
+    <div className='relative' ref={ref}>
+      <button
+        type='button'
+        aria-label={label}
+        aria-expanded={open}
+        title={label}
+        onClick={() => setOpen(o => !o)}
+        className={`checker relative block ${dim}`}
+        style={{ boxShadow: '0 0 0 2px var(--stone-500), 0 0 0 4px var(--void)' }}
+      >
+        <span className='absolute inset-0' style={{ background: value }} />
       </button>
-      
-      {isOpen && (
-        <div className="absolute z-10 p-4 bg-neutral-900" style={{ width: '200px' }}>
-          {/* Saturation/Lightness picker */}
-          <div
-            className="w-full h-40 mb-2 cursor-pointer relative"
-            style={{
-              background: `
-                linear-gradient(to right, #fff 0%, hsl(${hsla.h}, 100%, 50%) 100%),
-                linear-gradient(to top, #000 0%, transparent 100%)
-              `,
-              backgroundBlendMode: 'multiply'
-            }}
-            onMouseDown={handleSaturationLightnessChange}
-            onMouseMove={(e) => e.buttons && handleSaturationLightnessChange(e)}
-          >
-            <div
-              className="w-3 h-3 border-2 border-white transform -translate-x-1/2 -translate-y-1/2"
-              style={{
-                position: 'absolute',
-                left: `${hsla.s}%`,
-                top: `${100 - hsla.l}%`,
-                backgroundColor: color
-              }}
-            />
-          </div>
-
-          {/* Hue slider */}
-          <div
-            className="w-full h-4 cursor-pointer relative"
-            style={{
-              background: 'linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)'
-            }}
-            onMouseDown={handleHueChange}
-            onMouseMove={(e) => e.buttons && handleHueChange(e)}
-          >
-            <div
-              className="w-1 h-full outline outline-2 outline-neutral-50 transform -translate-x-1/2"
-              style={{
-                position: 'absolute',
-                left: `${(hsla.h / 360) * 100}%`,
-                backgroundColor: `hsl(${hsla.h}, 100%, 50%)`
-              }}
-            />
-          </div>
-
-          {/* Alpha slider */}
-          <div
-            className="w-full h-4 cursor-pointer relative mt-2"
-            style={{
-              background: `linear-gradient(to right, transparent, ${HSLAToHex(hsla.h, hsla.s, hsla.l, 1).slice(0, 7)})`,
-              
-            }}
-            onMouseDown={handleAlphaChange}
-            onMouseMove={(e) => e.buttons && handleAlphaChange(e)}
-          >
-            <div
-              className="w-1 h-full outline outline-2 outline-neutral-50 transform -translate-x-1/2"
-              style={{
-                position: 'absolute',
-                left: `${hsla.a * 100}%`,
-                backgroundColor: HSLAToHex(hsla.h, hsla.s, hsla.l, hsla.a)
-              }}
-            />
-          </div>
+      {open && (
+        <div
+          className={`px-frame animate-rise absolute z-40 mt-3 p-3 ${align === 'right' ? 'right-0' : 'left-0'}`}
+        >
+          <ColorEditor value={value} onChange={onChange} />
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ColorPicker;
+export default ColorPicker
